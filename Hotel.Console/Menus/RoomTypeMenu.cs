@@ -20,14 +20,14 @@ namespace Hotel.ConsoleApp.Menus
             while (true)
             {
                 Console.WriteLine("1. Create new RoomType ");
-            Console.WriteLine("2. Read RoomTypes ");
-            Console.WriteLine("3. Update RoomType ");
-            Console.WriteLine("4. Delete RoomType ");
-            Console.WriteLine("x. Main menu ");
-            string c = Console.ReadLine();
-            Console.WriteLine("------------------------------------------------------------------------" +
-              "-----------------------------------------------------------------------------------");
-            
+                Console.WriteLine("2. Read RoomTypes ");
+                Console.WriteLine("3. Update RoomType ");
+                Console.WriteLine("4. Delete RoomType ");
+                Console.WriteLine("x. Main menu ");
+                string c = Console.ReadLine();
+                Console.WriteLine("------------------------------------------------------------------------" +
+                  "-----------------------------------------------------------------------------------");
+
                 switch (c)
                 {
                     case "1":
@@ -40,7 +40,7 @@ namespace Hotel.ConsoleApp.Menus
                         UpdateRoomType();
                         break;
                     case "4":
-                       DeleteRoomType();
+                        DeleteRoomType();
                         break;
                     default:
                         throw new ArgumentException("unhendled case");
@@ -52,12 +52,22 @@ namespace Hotel.ConsoleApp.Menus
         }
         public void AddRoomType()
         {
-            var roomType = new RoomType();
-            Console.WriteLine("Print Status: ");
-            roomType.Type = Console.ReadLine();
-            roomTypeService.AddRoomType(roomType);
-            Console.WriteLine("Object successful added");
-            ConsoleRoomTypePresenter.Present(roomTypeService.ReadRoomTypes());
+            try
+            {
+                var roomType = new RoomType();
+                Console.WriteLine("Print Status: ");
+                roomType.Type = Console.ReadLine();
+                if (!Validation.IsNullOrEmpty(roomType.Type) || !Validation.ValidateString(roomType.Type))
+                    AddRoomType();
+                roomTypeService.AddRoomType(roomType);
+                Console.WriteLine("Object successful added");
+                ConsoleRoomTypePresenter.Present(roomTypeService.ReadRoomTypes());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                AddRoomType();
+            }
         }
         public void ReadRoomType()
         {
@@ -66,24 +76,41 @@ namespace Hotel.ConsoleApp.Menus
 
         public void UpdateRoomType()
         {
-            var roomType = new RoomType();
-            Console.WriteLine("Print Id: ");
-            int id = Int32.Parse(Console.ReadLine());
-            Console.WriteLine("Print Type: ");
-            roomType.Type = Console.ReadLine();
-
-            roomTypeService.UpdateRoomType(id, roomType);
-            Console.WriteLine("Object successful updated");
-            ConsoleRoomTypePresenter.Present(roomTypeService.ReadRoomTypes());
+            try
+            {
+                var roomType = new RoomType();
+                Console.WriteLine("Print Id: ");
+                int id = Int32.Parse(Console.ReadLine());
+                Console.WriteLine("Print Type: ");
+                roomType.Type = Console.ReadLine();
+                if (!Validation.IsNullOrEmpty(roomType.Type) || !Validation.ValidateString(roomType.Type))
+                    UpdateRoomType();
+                roomTypeService.UpdateRoomType(id, roomType);
+                Console.WriteLine("Object successful updated");
+                ConsoleRoomTypePresenter.Present(roomTypeService.ReadRoomTypes());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                UpdateRoomType();
+            }
 
         }
         public void DeleteRoomType()
         {
-            Console.WriteLine("Print Id: ");
-            int id = Int32.Parse(Console.ReadLine());
-            roomTypeService.DeleteRoomType(id);
-            Console.WriteLine("Object successful updated");
-            ConsoleRoomTypePresenter.Present(roomTypeService.ReadRoomTypes());
+            try
+            {
+                Console.WriteLine("Print Id: ");
+                int id = Int32.Parse(Console.ReadLine());
+                roomTypeService.DeleteRoomType(id);
+                Console.WriteLine("Object successful updated");
+                ConsoleRoomTypePresenter.Present(roomTypeService.ReadRoomTypes());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                DeleteRoomType();
+            }
         }
     }
 }

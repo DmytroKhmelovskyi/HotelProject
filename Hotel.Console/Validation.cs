@@ -12,7 +12,7 @@ namespace Hotel.ConsoleApp
         {
             var isValid = false;
             var email = "";
-            Regex emailPattern = new Regex(@"^([\w\.\-] +)@([\w\-] +)((\.(\w){ 2,3})+)$");
+            Regex emailPattern = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
             do
             {
                 Console.WriteLine("Print Email: ");
@@ -50,24 +50,41 @@ namespace Hotel.ConsoleApp
             return phone;
 
         }
-        public static string isValidInput()
+        public static bool IsNullOrEmpty(string nameInput)
         {
-            bool isValid = false;
-            var nameInput = "";
-            do
+            if (string.IsNullOrEmpty(nameInput))
             {
-                nameInput = Console.ReadLine();
-                if (!string.IsNullOrEmpty(nameInput))
+                Console.WriteLine("Field cant be empty");
+                return false;
+            }
+
+            return true;
+        }
+        public static bool ValidateString(string string1)
+        {
+            List<string> invalidChars = new List<string>() { "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "-", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", };
+            if (string1.Length > 50)
+            {
+                Console.WriteLine("String too Long");
+                return false;
+            }
+            else if (!(!string1.Equals(string1.ToLower())))
+            {
+                Console.WriteLine("Requres at least one uppercase");
+                return false;
+            }
+            else
+            {
+                foreach (string s in invalidChars)
                 {
-                    isValid = true;
-                    break;
-
+                    if (string1.Contains(s))
+                    {
+                        Console.WriteLine("String contains invalid character: " + s);
+                        return false;
+                    }
                 }
-                Console.WriteLine("Incorrect input");
-
-
-            } while (!isValid);
-            return nameInput;
+                return true;
+            }
         }
 
     }

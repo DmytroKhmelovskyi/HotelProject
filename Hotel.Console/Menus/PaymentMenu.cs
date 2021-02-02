@@ -19,14 +19,14 @@ namespace Hotel.ConsoleApp.Menus
             while (true)
             {
                 Console.WriteLine("1. Add payment ");
-            Console.WriteLine("2. Read payments ");
-            Console.WriteLine("3. Update payment ");
-            Console.WriteLine("4. Delete payment ");
-            Console.WriteLine("x. Main menu ");
-            string c = Console.ReadLine();
-            Console.WriteLine("------------------------------------------------------------------------" +
-              "-----------------------------------------------------------------------------------");
-           
+                Console.WriteLine("2. Read payments ");
+                Console.WriteLine("3. Update payment ");
+                Console.WriteLine("4. Delete payment ");
+                Console.WriteLine("x. Main menu ");
+                string c = Console.ReadLine();
+                Console.WriteLine("------------------------------------------------------------------------" +
+                  "-----------------------------------------------------------------------------------");
+
                 switch (c)
                 {
                     case "1":
@@ -55,27 +55,38 @@ namespace Hotel.ConsoleApp.Menus
         public void AddPayment()
         {
             Payment payment = new Payment();
-            Console.WriteLine("Print GuestId: ");
-            payment.GuestId = Int32.Parse(Console.ReadLine());
-            Console.WriteLine("Print ReservationId: ");
-            payment.ReservationId = Int32.Parse(Console.ReadLine());
-            Console.WriteLine("Print Amount: ");
-            payment.Amount = Int32.Parse(Console.ReadLine());
-            Console.WriteLine("Print PayTime: ");
-            payment.PayTime = DateTime.Parse(Console.ReadLine());
-            paymentService.AddPayment(payment);
-            Console.WriteLine("Object successful Added");
-            ConsolePaymentPresenter.Present(paymentService.ReadPayments());
-
+            try
+            {
+                Console.WriteLine("Print GuestId: ");
+                payment.GuestId = Int32.Parse(Console.ReadLine());
+                Console.WriteLine("Print ReservationId: ");
+                payment.ReservationId = Int32.Parse(Console.ReadLine());
+                Console.WriteLine("Print Amount: ");
+                payment.Amount = decimal.Parse(Console.ReadLine());
+                Console.WriteLine("Print PayTime: ");
+                payment.PayTime = DateTime.Parse(Console.ReadLine());
+                paymentService.AddPayment(payment);
+                Console.WriteLine("Object successful Added");
+                ConsolePaymentPresenter.Present(paymentService.ReadPayments());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                AddPayment();
+            }
         }
-        public void ReadPayment()
-        {
-            ConsolePaymentPresenter.Present(paymentService.ReadPayments());
-        }
+  
+    public void ReadPayment()
+    {
+        ConsolePaymentPresenter.Present(paymentService.ReadPayments());
+    }
 
-        public void UpdatePayment()
+    public void UpdatePayment()
+    {
+
+        Payment payment = new Payment();
+        try
         {
-            Payment payment = new Payment();
             Console.WriteLine("Print Id: ");
             int id = Int32.Parse(Console.ReadLine());
             Console.WriteLine("Print GuestId: ");
@@ -89,9 +100,18 @@ namespace Hotel.ConsoleApp.Menus
             paymentService.UpdatePayment(id, payment);
             Console.WriteLine("Object successful updated");
             ConsolePaymentPresenter.Present(paymentService.ReadPayments());
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            UpdatePayment();
 
         }
-        public void DeletePayment()
+
+    }
+    public void DeletePayment()
+    {
+        try
         {
             Console.WriteLine("Print Id: ");
             int id = Int32.Parse(Console.ReadLine());
@@ -99,5 +119,12 @@ namespace Hotel.ConsoleApp.Menus
             Console.WriteLine("Object successful deleted");
             ConsolePaymentPresenter.Present(paymentService.ReadPayments());
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            DeletePayment();
+
+        }
     }
+}
 }

@@ -53,23 +53,30 @@ namespace Hotel.ConsoleApp.Menus
         }
         public void AddReservation()
         {
-
-            Reservation reservation = new Reservation();
-            Console.WriteLine("Print GuestId: ");
-            reservation.GuestId = Int32.Parse(Console.ReadLine());
-            Console.WriteLine("Print RoomId: ");
-            reservation.RoomId = Int32.Parse(Console.ReadLine());
-            Console.WriteLine("Print ReservationDate: ");
-            reservation.ReservationDate = DateTime.Parse(Console.ReadLine());
-            Console.WriteLine("Print CheckInDate: ");
-            reservation.CheckInDate = DateTime.Parse(Console.ReadLine());
-            Console.WriteLine("Print CheckOutDate: ");
-            reservation.CheckOutDate = DateTime.Parse(Console.ReadLine());
-            Console.WriteLine("Print PersonCount: ");
-            reservation.PersonCount = Int32.Parse(Console.ReadLine());
-            reservationService.AddReservation(reservation);
-            Console.WriteLine("Object Added updated");
-            ConsoleReservationPresenter.Present(reservationService.ReadReservations());
+            try
+            {
+                Reservation reservation = new Reservation();
+                Console.WriteLine("Print GuestId: ");
+                reservation.GuestId = Int32.Parse(Console.ReadLine());
+                Console.WriteLine("Print RoomId: ");
+                reservation.GuestId = Int32.Parse(Console.ReadLine());
+                Console.WriteLine("Print ReservationDate: ");
+                reservation.ReservationDate = DateTime.Parse(Console.ReadLine());
+                Console.WriteLine("Print CheckInDate: ");
+                reservation.CheckInDate = DateTime.Parse(Console.ReadLine());
+                Console.WriteLine("Print CheckOutDate: ");
+                reservation.CheckOutDate = DateTime.Parse(Console.ReadLine());
+                Console.WriteLine("Print PersonCount: ");
+                reservation.PersonCount = Int32.Parse(Console.ReadLine());
+                reservationService.AddReservation(reservation);
+                Console.WriteLine("Object Added updated");
+                ConsoleReservationPresenter.Present(reservationService.ReadReservations());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                AddReservation();
+            }
 
         }
         public void ReadReservation()
@@ -78,33 +85,49 @@ namespace Hotel.ConsoleApp.Menus
         }
         public void UpdateReservation()
         {
-            Reservation reservation = new Reservation();
-            Console.WriteLine("Print Id: ");
-            int id = Int32.Parse(Console.ReadLine());
-            Console.WriteLine("Print GuestId: ");
-            reservation.GuestId = Int32.Parse(Console.ReadLine());
-            Console.WriteLine("Print RoomId: ");
-            reservation.RoomId = Int32.Parse(Console.ReadLine());
-            Console.WriteLine("Print ReservationDate: ");
-            reservation.ReservationDate = DateTime.Parse(Console.ReadLine());
-            Console.WriteLine("Print CheckInDate: ");
-            reservation.CheckInDate = DateTime.Parse(Console.ReadLine());
-            Console.WriteLine("Print CheckOutDate: ");
-            reservation.CheckOutDate = DateTime.Parse(Console.ReadLine());
-            Console.WriteLine("Print PersonCount: ");
-            reservation.PersonCount = Int32.Parse(Console.ReadLine());
-            reservationService.UpdateReservation(id, reservation);
-            Console.WriteLine("Object successful updated");
-            ConsoleReservationPresenter.Present(reservationService.ReadReservations());
+            try
+            {
+                Reservation reservation = new Reservation();
+                Console.WriteLine("Print Id: ");
+                int id = Int32.Parse(Console.ReadLine());
+                Console.WriteLine("Print GuestId: ");
+                reservation.GuestId = Int32.Parse(Console.ReadLine());
+                Console.WriteLine("Print RoomId: ");
+                reservation.RoomId = Int32.Parse(Console.ReadLine());
+                Console.WriteLine("Print ReservationDate: ");
+                reservation.ReservationDate = DateTime.Parse(Console.ReadLine());
+                Console.WriteLine("Print CheckInDate: ");
+                reservation.CheckInDate = DateTime.Parse(Console.ReadLine());
+                Console.WriteLine("Print CheckOutDate: ");
+                reservation.CheckOutDate = DateTime.Parse(Console.ReadLine());
+                Console.WriteLine("Print PersonCount: ");
+                reservation.PersonCount = Int32.Parse(Console.ReadLine());
+                reservationService.UpdateReservation(id, reservation);
+                Console.WriteLine("Object successful updated");
+                ConsoleReservationPresenter.Present(reservationService.ReadReservations());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                UpdateReservation();
+            }
 
         }
         public void DeleteReservation()
         {
-            Console.WriteLine("Print Id: ");
-            int id = Int32.Parse(Console.ReadLine());
-            reservationService.DeleteReservation(id);
-            Console.WriteLine("Object successful deleted");
-            ConsoleReservationPresenter.Present(reservationService.ReadReservations());
+            try
+            {
+                Console.WriteLine("Print Id: ");
+                int id = Int32.Parse(Console.ReadLine());
+                reservationService.DeleteReservation(id);
+                Console.WriteLine("Object successful deleted");
+                ConsoleReservationPresenter.Present(reservationService.ReadReservations());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                DeleteReservation();
+            }
         }
     }
 }

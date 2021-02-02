@@ -36,7 +36,6 @@ namespace EntityFrameworkProgect.Services
         public RoomStatus UpdateRoomStatus(int id, RoomStatus roomStatus)
         {
             var roomStatusUpdate = context.RoomStatuses.SingleOrDefault(rt => rt.Id == id);
-            roomStatusUpdate.Id = roomStatus.Id;
             roomStatusUpdate.Status = roomStatus.Status;
             context.RoomStatuses.Update(roomStatusUpdate);
             context.SaveChanges();

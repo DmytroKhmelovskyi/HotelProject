@@ -35,7 +35,6 @@ namespace EntityFrameworkProgect.Services
         public RoomType UpdateRoomType(int id, RoomType roomType)
         {
             var roomTypeUpdate = context.RoomTypes.SingleOrDefault(rt => rt.Id == id);
-            roomTypeUpdate.Id = roomType.Id;
             roomTypeUpdate.Type = roomType.Type;
             context.RoomTypes.Update(roomTypeUpdate);
             context.SaveChanges();

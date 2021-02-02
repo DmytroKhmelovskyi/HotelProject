@@ -41,7 +41,6 @@ namespace EntityFrameworkProgect.Services
         public Reservation UpdateReservation(int id, Reservation reservation)
         {
             var reservationUpdate = context.Reservations.SingleOrDefault(rs => rs.Id == id);
-            reservationUpdate.Id = reservation.Id;
             reservationUpdate.GuestId = reservation.GuestId;
             reservationUpdate.RoomId = reservation.RoomId;
             reservationUpdate.ReservationDate = reservation.ReservationDate;

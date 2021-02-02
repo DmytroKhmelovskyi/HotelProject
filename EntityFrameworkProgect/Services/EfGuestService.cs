@@ -43,8 +43,8 @@ namespace EntityFrameworkProgect.Services
         }
         public Guest UpdateGuests(int id, Guest guest)
         {
+
             var guestUpdate = context.Guests.SingleOrDefault(g => g.Id == id);
-            guestUpdate.Id = guest.Id;
             guestUpdate.FirstName = guest.FirstName;
             guestUpdate.LastName = guest.LastName;
             guestUpdate.Email = guest.Email;
@@ -54,6 +54,7 @@ namespace EntityFrameworkProgect.Services
             context.Guests.Update(guestUpdate);
             context.SaveChanges();
             return guestUpdate;
+
         }
         public void DeleteGuests(int id)
         {

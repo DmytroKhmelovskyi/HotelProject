@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
 
 namespace ADOProject.Services
 {
@@ -130,7 +129,9 @@ namespace ADOProject.Services
 
                 cmd.ExecuteNonQuery();
             }
+
             return guest;
+
         }
     }
 }

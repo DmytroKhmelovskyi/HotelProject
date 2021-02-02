@@ -58,63 +58,100 @@ namespace Hotel.ConsoleApp.Menus
 
         private void AddGuest()
         {
-            Console.WriteLine("Print First_Name: ");
-            string fName = Validation.isValidInput();
-            Console.WriteLine("Print Last_Name: ");
-            string lName = Validation.isValidInput();
-            string email = Validation.ReadEmail();
-            string phone = Validation.ReadPhone();
-            Console.WriteLine("Print City: ");
-            string city = Validation.isValidInput();
-            Console.WriteLine("Print Country: ");
-            string country = Validation.isValidInput();
-
-            var guest = new Guest
+            try
             {
-                FirstName = fName,
-                LastName = lName,
-                Email = email,
-                Phone = phone,
-                City = city,
-                Country = country,
-            };
+                Console.WriteLine("Print First_Name: ");
+                string fName = Console.ReadLine();
+                if (!Validation.IsNullOrEmpty(fName) || !Validation.ValidateString(fName))
+                { AddGuest(); }
+                Console.WriteLine("Print Last_Name: ");
+                string lName = Console.ReadLine();
+                if (!Validation.IsNullOrEmpty(lName) || !Validation.ValidateString(lName))
+                    AddGuest();
+                string email = Validation.ReadEmail();
+                string phone = Validation.ReadPhone();
+                Console.WriteLine("Print City: ");
+                string city = Console.ReadLine();
+                if (!Validation.IsNullOrEmpty(city) || !Validation.ValidateString(city))
+                    AddGuest();
+                Console.WriteLine("Print Country: ");
+                string country = Console.ReadLine();
+                if (!Validation.IsNullOrEmpty(country) || !Validation.ValidateString(country))
+                    AddGuest();
 
-            guestService.AddGuest(guest);
-            Console.WriteLine("Guest added successful");
-            ConsoleGuestPresenter.Present(guestService.ReadGuests());
+                var guest = new Guest
+                {
+                    FirstName = fName,
+                    LastName = lName,
+                    Email = email,
+                    Phone = phone,
+                    City = city,
+                    Country = country,
+                };
+
+                guestService.AddGuest(guest);
+                Console.WriteLine("Guest added successful");
+                ConsoleGuestPresenter.Present(guestService.ReadGuests());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                AddGuest();
+            }
 
 
         }
         public void UpdateGuest()
         {
-            Guest guest = new Guest();
-            Console.WriteLine("Print Id: ");
-            int id = Int32.Parse(Console.ReadLine());
-            Console.WriteLine("Incorrect Id ");
-            Console.WriteLine("Print First_Name: ");
-            guest.FirstName = Validation.isValidInput();
-            Console.WriteLine("Print Last_Name: ");
-            guest.LastName = Validation.isValidInput();
-            Console.WriteLine("Print Email: ");
-            guest.Email = Validation.ReadEmail();
-            Console.WriteLine("Print Number: ");
-            guest.Phone = Validation.ReadPhone();
-            Console.WriteLine("Print City: ");
-            guest.City = Validation.isValidInput();
-            Console.WriteLine("Print Country: ");
-            guest.Country = Validation.isValidInput();
-            guestService.UpdateGuests(id, guest);
-            Console.WriteLine("Object successful updated");
-            ConsoleGuestPresenter.Present(guestService.ReadGuests());
+            try
+            {
+                Guest guest = new Guest();
+                Console.WriteLine("Print Id: ");
+                int id = Int32.Parse(Console.ReadLine());
+                Console.WriteLine("Print First_Name: ");
+                guest.FirstName = Console.ReadLine();
+                if (!Validation.IsNullOrEmpty(guest.FirstName) || !Validation.ValidateString(guest.FirstName))
+                    UpdateGuest();
+                Console.WriteLine("Print Last_Name: ");
+                guest.LastName = Console.ReadLine();
+                if (!Validation.IsNullOrEmpty(guest.LastName) || !Validation.ValidateString(guest.LastName))
+                    UpdateGuest();
+                guest.Email = Validation.ReadEmail();
+                guest.Phone = Validation.ReadPhone();
+                Console.WriteLine("Print City: ");
+                guest.City = Console.ReadLine();
+                if (!Validation.IsNullOrEmpty(guest.City) || !Validation.ValidateString(guest.City))
+                    UpdateGuest();
+                Console.WriteLine("Print Country: ");
+                guest.Country = Console.ReadLine();
+                if (!Validation.IsNullOrEmpty(guest.Country) || !Validation.ValidateString(guest.Country))
+                    UpdateGuest();
+                guestService.UpdateGuests(id, guest);
+                Console.WriteLine("Object successful updated");
+                ConsoleGuestPresenter.Present(guestService.ReadGuests());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                UpdateGuest();
+            }
 
         }
         public void DeleteGuest()
         {
-            Console.WriteLine("Print Id: ");
-            int id = Int32.Parse(Console.ReadLine());
-            guestService.DeleteGuests(id);
-            Console.WriteLine("Object successful deleted");
-            ConsoleGuestPresenter.Present(guestService.ReadGuests());
+            try
+            {
+                Console.WriteLine("Print Id: ");
+                int id = Int32.Parse(Console.ReadLine());
+                guestService.DeleteGuests(id);
+                Console.WriteLine("Object successful deleted");
+                ConsoleGuestPresenter.Present(guestService.ReadGuests());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                DeleteGuest();
+            }
         }
     }
 

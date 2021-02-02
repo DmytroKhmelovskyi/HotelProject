@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace EntityFrameworkProgect.Services
 {
-   public class EfPaymentService : IPaymentService
+    public class EfPaymentService : IPaymentService
     {
         private readonly HotelDatabaseContext context;
         public EfPaymentService(HotelDatabaseContext _context)
@@ -39,7 +39,6 @@ namespace EntityFrameworkProgect.Services
         public Payment UpdatePayment(int id, Payment payment)
         {
             var paymentUpdate = context.Payments.SingleOrDefault(p => p.Id == id);
-            paymentUpdate.Id = payment.Id;
             paymentUpdate.GuestId = payment.GuestId;
             paymentUpdate.ReservationId = payment.ReservationId;
             paymentUpdate.Amount = payment.Amount;
@@ -51,8 +50,8 @@ namespace EntityFrameworkProgect.Services
         }
         public void DeletePayment(int id)
         {
-            Guest guest = context.Guests.Single(g => g.Id == id);
-            context.Guests.Remove(guest);
+            Payment payment = context.Payments.Single(g => g.Id == id);
+            context.Payments.Remove(payment);
             context.SaveChanges();
 
         }

@@ -19,14 +19,14 @@ namespace Hotel.ConsoleApp.Menus
             while (true)
             {
                 Console.WriteLine("1. Add roomStatus ");
-            Console.WriteLine("2. Read roomStatuses ");
-            Console.WriteLine("3. Update roomStatus ");
-            Console.WriteLine("4. Delete roomStatus ");
-            Console.WriteLine("x. Main menu ");
-            string c = Console.ReadLine();
-            Console.WriteLine("------------------------------------------------------------------------" +
-              "-----------------------------------------------------------------------------------");
-           
+                Console.WriteLine("2. Read roomStatuses ");
+                Console.WriteLine("3. Update roomStatus ");
+                Console.WriteLine("4. Delete roomStatus ");
+                Console.WriteLine("x. Main menu ");
+                string c = Console.ReadLine();
+                Console.WriteLine("------------------------------------------------------------------------" +
+                  "-----------------------------------------------------------------------------------");
+
                 switch (c)
                 {
                     case "1":
@@ -53,12 +53,23 @@ namespace Hotel.ConsoleApp.Menus
         }
         public void AddRoomStatus()
         {
-            var roomStatus = new RoomStatus();
-            Console.WriteLine("Print Status: ");
-            roomStatus.Status = Console.ReadLine();
-            roomStatusService.AddRoomStatus(roomStatus);
-            Console.WriteLine("Object successful added");
-            ConsoleRoomStatusPresenter.Present(roomStatusService.ReadRoomStatuses());
+            try
+            {
+
+                var roomStatus = new RoomStatus();
+                Console.WriteLine("Print Status: ");
+                roomStatus.Status = Console.ReadLine();
+                if (!Validation.IsNullOrEmpty(roomStatus.Status) || !Validation.ValidateString(roomStatus.Status))
+                    AddRoomStatus();
+                roomStatusService.AddRoomStatus(roomStatus);
+                Console.WriteLine("Object successful added");
+                ConsoleRoomStatusPresenter.Present(roomStatusService.ReadRoomStatuses());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                AddRoomStatus();
+            }
         }
         public void ReadRoomStatus()
         {
@@ -66,24 +77,41 @@ namespace Hotel.ConsoleApp.Menus
         }
         public void UpdateteRoomStatus()
         {
-            var roomStatus = new RoomStatus();
-            Console.WriteLine("Print Id: ");
-            int id = Int32.Parse(Console.ReadLine());
-            Console.WriteLine("Print Status: ");
-            roomStatus.Status = Console.ReadLine();
-
-            roomStatusService.UpdateRoomStatus(id, roomStatus);
-            Console.WriteLine("Object successful updated");
-            ConsoleRoomStatusPresenter.Present(roomStatusService.ReadRoomStatuses());
+            try
+            {
+                var roomStatus = new RoomStatus();
+                Console.WriteLine("Print Id: ");
+                int id = Int32.Parse(Console.ReadLine());
+                Console.WriteLine("Print Status: ");
+                roomStatus.Status = Console.ReadLine();
+                if (!Validation.IsNullOrEmpty(roomStatus.Status) || !Validation.ValidateString(roomStatus.Status))
+                    UpdateteRoomStatus();
+                roomStatusService.UpdateRoomStatus(id, roomStatus);
+                Console.WriteLine("Object successful updated");
+                ConsoleRoomStatusPresenter.Present(roomStatusService.ReadRoomStatuses());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                UpdateteRoomStatus();
+            }
 
         }
         public void DeleteRoomStatus()
         {
-            Console.WriteLine("Print Id: ");
-            int id = Int32.Parse(Console.ReadLine());
-            roomStatusService.DeleteRoomStatus(id);
-            Console.WriteLine("Object successful deleted");
-            ConsoleRoomStatusPresenter.Present(roomStatusService.ReadRoomStatuses());
+            try
+            {
+                Console.WriteLine("Print Id: ");
+                int id = Int32.Parse(Console.ReadLine());
+                roomStatusService.DeleteRoomStatus(id);
+                Console.WriteLine("Object successful deleted");
+                ConsoleRoomStatusPresenter.Present(roomStatusService.ReadRoomStatuses());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                DeleteRoomStatus();
+            }
         }
     }
 }
