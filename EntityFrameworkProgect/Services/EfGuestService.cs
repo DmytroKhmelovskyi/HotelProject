@@ -56,13 +56,20 @@ namespace EntityFrameworkProgect.Services
             return guestUpdate;
 
         }
-        public void DeleteGuests(int id)
+        public Guest DeleteGuests(int id)
         {
 
             Guest guest = context.Guests.Single(g => g.Id == id);
             context.Guests.Remove(guest);
             context.SaveChanges();
+            return guest;
 
+        }
+
+        public Guest ReadSingle(int? id)
+        {
+            var guest = context.Guests.SingleOrDefault(g => g.Id == id);
+            return guest;
         }
     }
 }

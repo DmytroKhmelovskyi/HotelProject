@@ -9,7 +9,8 @@ namespace Hotel.Shared.Interfaces
 
         Guest AddGuest(Guest guest);
         Guest UpdateGuests(int id, Guest guest);
-        void DeleteGuests(int id);
+        Guest DeleteGuests(int id);
+        Guest ReadSingle(int? id);
 
 
 

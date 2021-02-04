@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ADOProject\ADOProject.csproj" />
+    <ProjectReference Include="..\EntityFrameworkProgect\EntityFrameworkProgect.csproj" />
     <ProjectReference Include="..\Hotel.Share\Hotel.Shared.csproj" />
   </ItemGroup>
 

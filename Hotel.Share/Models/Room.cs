@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-
+using System.ComponentModel.DataAnnotations;
 
 namespace Hotel.Shared.Models
 {
@@ -13,7 +13,11 @@ namespace Hotel.Shared.Models
         public int Id { get; set; }
         public int? RoomTypeId { get; set; }
         public int? RoomStatusId { get; set; }
+        [Required]
+        [Range(1, 100)]
         public int RoomNumber { get; set; }
+        [Required]
+        [Range(1,20)]
         public int MaxPerson { get; set; }
 
         public virtual RoomStatus RoomStatus { get; set; }

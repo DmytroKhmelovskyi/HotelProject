@@ -11,11 +11,17 @@ namespace EntityFrameworkProgect
         {
             services.AddDbContext<HotelDatabaseContext>();
             services.AddTransient<EfGuestService>();
+            services.AddTransient<IGuestService, EfGuestService>();
             services.AddTransient<EfReservationService>();
+            services.AddTransient<IReservationService, EfReservationService>();
             services.AddTransient<EfPaymentService>();
+            services.AddTransient<IPaymentService, EfPaymentService>();
             services.AddTransient<EfRoomService>();
+            services.AddTransient<IRoomService, EfRoomService>();
             services.AddTransient<EfRoomStatusService>();
+            services.AddTransient<IRoomStatusService, EfRoomStatusService>();
             services.AddTransient<EfRoomTypeService>();
+            services.AddTransient<IRoomTypeService, EfRoomTypeService>();
             return services;
         }
     }

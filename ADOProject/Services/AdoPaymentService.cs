@@ -102,7 +102,7 @@ namespace ADOProject.Services
                 var cmd = new SqlCommand();
                 cmd.Connection = conn;
 
-                cmd.CommandText = $"UPDATE Payments SET GuestId = {payment.GuestId}, ReservationId = {payment.ReservationId}, Amount = {payment.Amount}, PayTime = {payment.PayTime} WHERE Id = {id}";
+                cmd.CommandText = $"UPDATE Payments SET GuestId = '{payment.GuestId}', ReservationId = '{payment.ReservationId}', Amount = '{payment.Amount}', PayTime = '{payment.PayTime}' WHERE Id = {id}";
                 cmd.Parameters.AddWithValue("@id", payment.Id);
                 cmd.Parameters.AddWithValue("@GuestId", payment.GuestId);
                 cmd.Parameters.AddWithValue("@ReservationId", payment.ReservationId);

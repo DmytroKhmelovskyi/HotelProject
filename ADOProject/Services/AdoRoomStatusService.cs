@@ -94,7 +94,7 @@ namespace ADOProject.Services
                 var cmd = new SqlCommand();
                 cmd.Connection = conn;
 
-                cmd.CommandText = $"UPDATE RoomStatuses SET Status = {roomStatus.Status}";
+                cmd.CommandText = $"UPDATE RoomStatuses SET Status = '{roomStatus.Status}'";
                 cmd.Parameters.AddWithValue("@id", roomStatus.Id);
                 cmd.Parameters.AddWithValue("@RoomStatus", roomStatus.Status);
 

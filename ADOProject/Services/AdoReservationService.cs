@@ -105,8 +105,8 @@ namespace ADOProject.Services
                 var cmd = new SqlCommand();
                 cmd.Connection = conn;
 
-                cmd.CommandText = $"UPDATE Reservations SET GuestId = {reservation.GuestId}, RoomId = {reservation.RoomId}, ReservationDate = {reservation.ReservationDate}, " +
-                    $"CheckInDate = {reservation.CheckInDate}, CheckOutDate = {reservation.CheckOutDate}, PersonCount = {reservation} WHERE Id = {id}";
+                cmd.CommandText = $"UPDATE Reservations SET GuestId = '{reservation.GuestId}', RoomId = '{reservation.RoomId}', ReservationDate = '{reservation.ReservationDate}', " +
+                    $"CheckInDate = '{reservation.CheckInDate}', CheckOutDate = '{reservation.CheckOutDate}', PersonCount = '{reservation}' WHERE Id = {id}";
                 reservation.Id = id;
                 cmd.Parameters.AddWithValue("@id", reservation.Id);
                 cmd.Parameters.AddWithValue("@guestId", reservation.GuestId);

@@ -102,7 +102,7 @@ namespace ADOProject.Services
                     var cmd = new SqlCommand();
                     cmd.Connection = conn;
 
-                    cmd.CommandText = $"UPDATE Rooms SET RoomTypeId = {room.RoomTypeId}, RoomStatusId = {room.RoomStatusId}, RoomNumber = {room.RoomNumber}, MaxPerson = {room.MaxPerson}";
+                    cmd.CommandText = $"UPDATE Rooms SET RoomTypeId = '{room.RoomTypeId}', RoomStatusId = '{room.RoomStatusId}', RoomNumber = '{room.RoomNumber}', MaxPerson = '{room.MaxPerson}'";
                     cmd.Parameters.AddWithValue("@id", room.Id);
                     cmd.Parameters.AddWithValue("@RoomTypeId", room.RoomTypeId);
                     cmd.Parameters.AddWithValue("@RoomStatusId", room.RoomStatusId);
