@@ -14,7 +14,7 @@ namespace ADOProject.Services
         private readonly string connectionString;
         public AdoRoomTypeService()
         {
-            connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            connectionString = "Server=(localdb)\\MSSQLLocalDB;Database=HotelDatabase;Trusted_Connection=True;";
         }
         public RoomType AddRoomType(RoomType roomType)
         {
@@ -24,8 +24,8 @@ namespace ADOProject.Services
                     var cmd = new SqlCommand();
                     cmd.Connection = conn;
 
-                    cmd.CommandText = "INSERT INTO Rooms (Type)VALUES (@Type)";
-                    cmd.Parameters.AddWithValue("@Type", roomType.Type);
+                    cmd.CommandText = "INSERT INTO Rooms (RoomType)VALUES (@RoomType)";
+                    cmd.Parameters.AddWithValue("@RoomType", roomType.Type);
 
                     if (conn.State != ConnectionState.Open)
                     {
@@ -78,7 +78,7 @@ namespace ADOProject.Services
                         var rt = new RoomType
                         {
                             Id = dr.GetInt32("Id"),
-                            Type = dr.GetString("Type"),
+                            Type = dr.GetString("RoomType"),
                         };
                         roomTypes.Add(rt);
                     }
@@ -94,9 +94,9 @@ namespace ADOProject.Services
                 var cmd = new SqlCommand();
                 cmd.Connection = conn;
 
-                cmd.CommandText = $"UPDATE RoomTypes SET Status = {roomType.Type}";
+                cmd.CommandText = $"UPDATE RoomTypes SET RoomType = {roomType.Type}";
                 cmd.Parameters.AddWithValue("@id", roomType.Id);
-                cmd.Parameters.AddWithValue("@Status", roomType.Type);
+                cmd.Parameters.AddWithValue("@RoomType", roomType.Type);
 
                 if (conn.State != ConnectionState.Open)
                 {

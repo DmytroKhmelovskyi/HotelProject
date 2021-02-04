@@ -7,9 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntityFrameworkProgect", "E
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ADOProject", "ADOProject\ADOProject.csproj", "{923E9BB1-46BB-4737-AE06-069E71086D50}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hotel.Shared", "Hotel.Share\Hotel.Shared.csproj", "{1D76C37C-742F-44B5-91CC-A0A55A0D21FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hotel.Shared", "Hotel.Share\Hotel.Shared.csproj", "{1D76C37C-742F-44B5-91CC-A0A55A0D21FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hotel.ConsoleApp", "Hotel.Console\Hotel.ConsoleApp.csproj", "{559E58D8-25BA-4EEE-9A82-6741A8302E11}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hotel.ConsoleApp", "Hotel.Console\Hotel.ConsoleApp.csproj", "{559E58D8-25BA-4EEE-9A82-6741A8302E11}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelMVC", "HotelMVC\HotelMVC.csproj", "{7A34D186-0C3A-4DBA-B7CD-C7DEBAEAAE53}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{559E58D8-25BA-4EEE-9A82-6741A8302E11}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{559E58D8-25BA-4EEE-9A82-6741A8302E11}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{559E58D8-25BA-4EEE-9A82-6741A8302E11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A34D186-0C3A-4DBA-B7CD-C7DEBAEAAE53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A34D186-0C3A-4DBA-B7CD-C7DEBAEAAE53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A34D186-0C3A-4DBA-B7CD-C7DEBAEAAE53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A34D186-0C3A-4DBA-B7CD-C7DEBAEAAE53}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

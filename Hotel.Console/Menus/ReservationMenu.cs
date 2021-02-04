@@ -59,7 +59,7 @@ namespace Hotel.ConsoleApp.Menus
                 Console.WriteLine("Print GuestId: ");
                 reservation.GuestId = Int32.Parse(Console.ReadLine());
                 Console.WriteLine("Print RoomId: ");
-                reservation.GuestId = Int32.Parse(Console.ReadLine());
+                reservation.RoomId = Int32.Parse(Console.ReadLine());
                 Console.WriteLine("Print ReservationDate: ");
                 reservation.ReservationDate = DateTime.Parse(Console.ReadLine());
                 Console.WriteLine("Print CheckInDate: ");

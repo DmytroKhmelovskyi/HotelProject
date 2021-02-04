@@ -14,7 +14,7 @@ namespace ADOProject.Services
         private readonly string connectionString;
         public AdoRoomStatusService()
         {
-            connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            connectionString = "Server=(localdb)\\MSSQLLocalDB;Database=HotelDatabase;Trusted_Connection=True;";
         }
         public RoomStatus AddRoomStatus(RoomStatus roomStatus)
         {
@@ -24,8 +24,8 @@ namespace ADOProject.Services
                     var cmd = new SqlCommand();
                     cmd.Connection = conn;
 
-                    cmd.CommandText = "INSERT INTO Rooms (Status)VALUES (@Status)";
-                    cmd.Parameters.AddWithValue("@Status", roomStatus.Status);
+                    cmd.CommandText = "INSERT INTO Rooms (RoomStatus)VALUES (@RoomStatus)";
+                    cmd.Parameters.AddWithValue("@RoomStatus", roomStatus.Status);
 
                     if (conn.State != ConnectionState.Open)
                     {
@@ -78,7 +78,7 @@ namespace ADOProject.Services
                         var rst = new RoomStatus
                         {
                             Id = dr.GetInt32("Id"),
-                            Status = dr.GetString("Status"),                    
+                            Status = dr.GetString("RoomStatus"),                    
                         };
                         roomStatuses.Add(rst);
                     }
@@ -96,7 +96,7 @@ namespace ADOProject.Services
 
                 cmd.CommandText = $"UPDATE RoomStatuses SET Status = {roomStatus.Status}";
                 cmd.Parameters.AddWithValue("@id", roomStatus.Id);
-                cmd.Parameters.AddWithValue("@Status", roomStatus.Status);
+                cmd.Parameters.AddWithValue("@RoomStatus", roomStatus.Status);
 
                 if (conn.State != ConnectionState.Open)
                 {

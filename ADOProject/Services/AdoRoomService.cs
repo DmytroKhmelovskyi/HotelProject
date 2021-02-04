@@ -14,7 +14,7 @@ namespace ADOProject.Services
         private readonly string connectionString;
         public AdoRoomService()
         {
-            connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            connectionString = "Server=(localdb)\\MSSQLLocalDB;Database=HotelDatabase;Trusted_Connection=True;";
         }
         public Room AddRoom(Room room)
         {

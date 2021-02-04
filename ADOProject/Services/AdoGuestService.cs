@@ -13,7 +13,7 @@ namespace ADOProject.Services
         private readonly string connectionString;
         public AdoGuestService()
         {
-            connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            connectionString = "Server=(localdb)\\MSSQLLocalDB;Database=HotelDatabase;Trusted_Connection=True;";
         }
         public Guest AddGuest(Guest guest)
         {

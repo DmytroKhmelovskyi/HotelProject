@@ -14,7 +14,7 @@ namespace ADOProject.Services
         private readonly string connectionString;
         public AdoPaymentService()
         {
-            connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            connectionString = "Server=(localdb)\\MSSQLLocalDB;Database=HotelDatabase;Trusted_Connection=True;";
         }
         public Payment AddPayment(Payment payment)
         {
