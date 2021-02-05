@@ -10,5 +10,6 @@ namespace Hotel.Shared.Interfaces
         Payment AddPayment(Payment guest);
         Payment UpdatePayment(int id, Payment guest);
         void DeletePayment(int id);
+        Payment ReadSingle(int? id);
     }
 }

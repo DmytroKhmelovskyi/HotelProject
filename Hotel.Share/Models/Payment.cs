@@ -8,7 +8,8 @@ namespace Hotel.Shared.Models
         public int Id { get; set; }
         public int? GuestId { get; set; }
         public int? ReservationId { get; set; }
-        [Range(typeof(decimal), "0.00", "1000000.00")]
+
+        [Range(typeof(decimal), "0,00", "1000000,00")]
         public decimal Amount { get; set; }
         public DateTime? PayTime { get; set; }
 

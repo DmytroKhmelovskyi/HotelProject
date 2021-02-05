@@ -56,5 +56,10 @@ namespace EntityFrameworkProgect.Services
 
         }
 
+        public Payment ReadSingle(int? id)
+        {
+            var payment = context.Payments.SingleOrDefault(p => p.Id == id);
+            return payment;
+        }
     }
 }

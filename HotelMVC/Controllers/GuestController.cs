@@ -110,14 +110,7 @@ namespace HotelMVC.Controllers
 
             if (ModelState.IsValid)
             {
-                //try
-                //{
                     guestService.UpdateGuests(id, guest);
-                //}
-                //catch (Exception)
-                //{
-                //    throw new Exception("Something goes wrong");
-                //}
                 return RedirectToAction(nameof(Index));
             }
             return View(guest);

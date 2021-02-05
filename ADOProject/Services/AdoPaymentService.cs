@@ -95,6 +95,40 @@ namespace ADOProject.Services
             }
         }
 
+        public Payment ReadSingle(int? id)
+        {
+            var payment = new Payment();
+            using (var conn = new SqlConnection(connectionString))
+            {
+                var cmd = new SqlCommand();
+                cmd.Connection = conn;
+
+                cmd.CommandText = $"SELECT * FROM Payments WHERE Id = {id}";
+
+                if (conn.State != ConnectionState.Open)
+                {
+                    conn.Open();
+                }
+
+                using (var dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        var p = new Payment
+                        {
+                            Id = dr.GetInt32("Id"),
+                            GuestId = dr.GetInt32("GuestId"),
+                            ReservationId = dr.GetInt32("ReservationId"),
+                            Amount = dr.GetDecimal("Amount"),
+                            PayTime = dr.GetDateTime("PayTime"),
+                        };
+                        payment = p;
+                    }
+                }
+            }
+            return payment;
+        }
+
         public Payment UpdatePayment(int id, Payment payment)
         {
             using (var conn = new SqlConnection(connectionString))
