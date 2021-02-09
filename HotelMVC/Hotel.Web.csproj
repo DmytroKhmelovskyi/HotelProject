@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -9,9 +9,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="F:\Intership materials\Entity Framework Project\EntityFrameworkAssembly\Hotel.AdoDAL\Hotel.AdoDAL.csproj" />
-    <ProjectReference Include="F:\Intership materials\Entity Framework Project\EntityFrameworkAssembly\Hotel.EntityFrameworkDAL\Hotel.EntityFrameworkDAL.csproj" />
-    <ProjectReference Include="F:\Intership materials\Entity Framework Project\EntityFrameworkAssembly\Hotel.Share\Hotel.Shared.csproj" />
+    <ProjectReference Include="..\Hotel.Web.NUnitTests\Hotel.Web.NUnitTests.csproj" />
+    <ProjectReference Include="..\Hotel.AdoDAL\Hotel.AdoDAL.csproj" />
+    <ProjectReference Include="..\Hotel.EntityFrameworkDAL\Hotel.EntityFrameworkDAL.csproj" />
+    <ProjectReference Include="..\Hotel.Share\Hotel.Shared.csproj" />
   </ItemGroup>
 
 </Project>

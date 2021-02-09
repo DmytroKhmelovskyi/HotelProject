@@ -26,7 +26,7 @@ namespace Hotel.Web
             services.AddControllersWithViews();
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddAdoServices(connectionString);
-             //services.AddEntityFrameworkServices(connectionString);
+            //services.AddEntityFrameworkServices(connectionString);
             var mappingConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new MappingProfile());
