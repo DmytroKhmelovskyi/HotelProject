@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Hotel.Shared.FilterModels;
 using Hotel.Shared.Interfaces;
 using Hotel.Shared.Models;
+using Hotel.Web.Interfaces;
+using Hotel.Web.VIewModel;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HotelMVC.Controllers
+namespace Hotel.Web.Controllers
 {
     public class PaymentController : Controller
     {
@@ -17,27 +20,15 @@ namespace HotelMVC.Controllers
         }
         public IActionResult Index(string sortOrder, int? pageNumber)
         {
+
             ViewData["CurrentSort"] = sortOrder;
             ViewData["AmountSortParm"] = String.IsNullOrEmpty(sortOrder) ? "amount" : "";
             ViewData["PayTimeSortParm"] = sortOrder == "PayTime" ? "payTime" : "PayTime";
-            var payments = paymentService.ReadPayments();
-
-            switch (sortOrder)
-            {
-                case "amount":
-                    payments = payments.OrderBy(g => g.Amount);
-                    break;
-                case "payTime":
-                    payments = payments.OrderBy(g => g.PayTime);
-                    break;
-                default:
-                    payments = payments.OrderBy(g => g.Id);
-                    break;
-            }
-
-
             int pageSize = 5;
-            return View(PaginatedList<Payment>.Create(payments, pageNumber ?? 1, pageSize));
+            pageNumber ??= 1;
+            var filter = new PaymentFilter {Take = pageSize, Skip = (pageNumber.Value - 1) * pageSize, SortOrder = sortOrder, };
+            var (payments, count) = paymentService.ReadPayments(filter);
+            return View(PaginatedList<PaymentViewModel>.Create(payments, count, pageNumber.Value, pageSize));
         }
         [HttpGet]
         public IActionResult Create()
@@ -46,23 +37,18 @@ namespace HotelMVC.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([Bind("Id,GuestId,ReservationId,Amount,PayTime")] Payment payment)
+        public IActionResult Create(PaymentViewModel model)
         {
             if (ModelState.IsValid)
             {
-                paymentService.AddPayment(payment);
+                paymentService.AddPayment(model);
                 return RedirectToAction(nameof(Index));
             }
-            return View(payment);
+            return View(model);
         }
         [HttpGet]
         public IActionResult Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var payment = paymentService.ReadSingle(id);
             if (payment == null)
             {
@@ -74,11 +60,6 @@ namespace HotelMVC.Controllers
         [HttpGet]
         public IActionResult Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var payment = paymentService.ReadSingle(id);
             if (payment == null)
             {
@@ -88,27 +69,18 @@ namespace HotelMVC.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(int id, [Bind("Id,FirstName,LastName,Email,Phone,City,Country,ReservationsCount")] Payment payment)
+        public IActionResult Edit(int id, PaymentViewModel model)
         {
-            if (id != payment.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
-                paymentService.UpdatePayment(id, payment);
+                paymentService.UpdatePayment(id, model);
                 return RedirectToAction(nameof(Index));
             }
-            return View(payment);
+            return View(model);
         }
         [HttpGet]
         public IActionResult Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
             var payment = paymentService.ReadSingle(id);
             if (payment == null)
             {

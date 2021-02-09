@@ -2,17 +2,15 @@
 using Hotel.Shared.Interfaces;
 using Hotel.Shared.Models;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Hotel.ConsoleApp.Menus
 {
     public class RoomMenu
     {
-        IRoomService roomService;
-        public RoomMenu(IServiceFactory service)
+        IRoomRepository roomService;
+        public RoomMenu(IRepositoryFactory service)
         {
-            roomService = service.GetRoomService();
+            roomService = service.GetRoomRepository();
         }
         public void Show()
         {

@@ -1,56 +1,31 @@
-﻿using Hotel.Shared.Interfaces;
-using Hotel.Shared.Models;
+﻿using Hotel.Shared.FilterModels;
+using Hotel.Web.Interfaces;
+using Hotel.Web.VIewModel;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System;
-using System.Linq;
 
-namespace HotelMVC.Controllers
+namespace Hotel.Web.Controllers
 {
     public class GuestController : Controller
     {
         private IGuestService guestService;
+
         public GuestController(IGuestService guestService)
         {
             this.guestService = guestService;
         }
-        public IActionResult Index(string sortOrder, int? pageNumber, string searchString, string currentFilter)
+        public IActionResult Index(string sortOrder, int? pageNumber, string searchString)
         {
+
             ViewData["CurrentSort"] = sortOrder;
             ViewData["FirstNameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "fName" : "";
             ViewData["LastNameSortParm"] = sortOrder == "Last Name" ? "lName_desc" : "Last Name";
-            if (searchString != null)
-            {
-                pageNumber = 1;
-            }
-            else
-            {
-                searchString = currentFilter;
-            }
             ViewData["CurrentFilter"] = searchString;
-            var guests = guestService.ReadGuests();
-            if (!String.IsNullOrEmpty(searchString))
-            {
-                guests = guests.Where(s => s.LastName.Contains(searchString)
-                                       || s.FirstName.Contains(searchString));
-            }
-
-            switch (sortOrder)
-            {
-                case "fName":
-                    guests = guests.OrderBy(g => g.FirstName);
-                    break;
-                case "lName_desc":
-                    guests = guests.OrderByDescending(g => g.LastName);
-                    break;
-                default:
-                    guests = guests.OrderBy(g => g.Id);
-                    break;
-            }
-
             int pageSize = 5;
-
-            return View(PaginatedList<Guest>.Create(guests, pageNumber ?? 1, pageSize));
+            pageNumber ??= 1;
+            var filter = new GuestFilter { Name = searchString, Take = pageSize, Skip = (pageNumber.Value - 1) * pageSize, SortOrder = sortOrder, };
+            var (guests, count) = guestService.ReadGuests(filter);
+            return View(PaginatedList<GuestViewModel>.Create(guests, count, pageNumber.Value, pageSize));
         }
         [HttpGet]
         public IActionResult Create()
@@ -59,23 +34,18 @@ namespace HotelMVC.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([Bind("Id,FirstName,LastName,Email,Phone,City,Country,ReservationsCount")] Guest guest)
+        public IActionResult Create(GuestViewModel model)
         {
             if (ModelState.IsValid)
             {
-                guestService.AddGuest(guest);
+                guestService.AddGuest(model);
                 return RedirectToAction(nameof(Index));
             }
-            return View(guest);
+            return View(model);
         }
         [HttpGet]
-        public IActionResult Details(int? id)
+        public IActionResult Details(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var guest = guestService.ReadSingle(id);
             if (guest == null)
             {
@@ -85,13 +55,8 @@ namespace HotelMVC.Controllers
             return View(guest);
         }
         [HttpGet]
-        public IActionResult Edit(int? id)
+        public IActionResult Edit(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var guest = guestService.ReadSingle(id);
             if (guest == null)
             {
@@ -101,33 +66,20 @@ namespace HotelMVC.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(int id, [Bind("Id,FirstName,LastName,Email,Phone,City,Country,ReservationsCount")] Guest guest)
+        public IActionResult Edit(int id, GuestViewModel guest)
         {
-            if (id != guest.Id)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
-                    guestService.UpdateGuests(id, guest);
+                guestService.UpdateGuests(id, guest);
                 return RedirectToAction(nameof(Index));
             }
             return View(guest);
         }
 
         [HttpGet]
-        public IActionResult Delete(int? id)
+        public IActionResult Delete(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
             var guest = guestService.ReadSingle(id);
-            if (guest == null)
-            {
-                return NotFound();
-            }
             return View(guest);
 
         }

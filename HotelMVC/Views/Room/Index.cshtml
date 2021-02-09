@@ -1,6 +1,6 @@
-﻿@using Hotel.Shared.Models;
-@using HotelMVC;
-@model PaginatedList<Room>
+﻿@using Hotel.Web.VIewModel;
+@using Hotel.Web;
+@model PaginatedList<RoomViewModel>
 @{
     ViewData["Title"] = "Rooms";
 }
@@ -10,27 +10,20 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<form asp-action="Index" method="get">
-    <div class="form-actions no-color">
-        <p>
-            Find by name: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
-            <input type="submit" value="Search" class="btn btn-default" /> |
-            <a asp-action="Index">Back to Full List</a>
-        </p>
-    </div>
-</form>
-
 <table class="table">
     <thead>
         <tr>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Last Name</a>
+                Room Type 
             </th>
             <th>
-                First Name
+                Room Status 
             </th>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">Enrollment Date</a>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["RoomNumberSortParm"]" >Room Number</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["MaxPersonSortParm"]" >Max Person</a>
             </th>
             <th></th>
         </tr>
@@ -40,10 +33,10 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.RoomTypeId)
+                    @Html.DisplayFor(modelItem => item.RoomTypeName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.RoomStatusId)
+                    @Html.DisplayFor(modelItem => item.RoomStatusName)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.RoomNumber)
@@ -69,14 +62,12 @@
 <a asp-action="Index"
    asp-route-sortOrder="@ViewData["CurrentSort"]"
    asp-route-pageNumber="@(Model.PageIndex - 1)"
-   asp-route-currentFilter="@ViewData["CurrentFilter"]"
    class="btn btn-default @prevDisabled">
     Previous
 </a>
 <a asp-action="Index"
    asp-route-sortOrder="@ViewData["CurrentSort"]"
    asp-route-pageNumber="@(Model.PageIndex + 1)"
-   asp-route-currentFilter="@ViewData["CurrentFilter"]"
    class="btn btn-default @nextDisabled">
     Next
 </a>

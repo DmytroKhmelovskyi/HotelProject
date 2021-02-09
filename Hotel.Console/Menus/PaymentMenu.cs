@@ -9,10 +9,10 @@ namespace Hotel.ConsoleApp.Menus
 {
     public class PaymentMenu
     {
-        private readonly IPaymentService paymentService;
-        public PaymentMenu(IServiceFactory service)
+        private readonly IPaymentRepository paymentService;
+        public PaymentMenu(IRepositoryFactory service)
         {
-            paymentService = service.GetPaymentService();
+            paymentService = service.GetPaymentRepository();
         }
         public void Show()
         {

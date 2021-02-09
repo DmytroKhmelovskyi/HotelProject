@@ -9,10 +9,10 @@ namespace Hotel.ConsoleApp.Menus
 {
     public class RoomStatusMenu
     {
-        IRoomStatusService roomStatusService;
-        public RoomStatusMenu(IServiceFactory service)
+        IRoomStatusRepository roomStatusService;
+        public RoomStatusMenu(IRepositoryFactory service)
         {
-            roomStatusService = service.GetRoomStatusService();
+            roomStatusService = service.GetRoomStatusRepository();
         }
         public void Show()
         {

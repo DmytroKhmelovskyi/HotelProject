@@ -9,10 +9,10 @@ namespace Hotel.ConsoleApp.Menus
 {
     public class ReservationMenu
     {
-        private readonly IReservationService reservationService;
-        public ReservationMenu(IServiceFactory service)
+        private readonly IReservationRepository reservationService;
+        public ReservationMenu(IRepositoryFactory service)
         {
-            reservationService = service.GetReservationService();
+            reservationService = service.GetReservationRepository();
         }
         public void Show()
         {

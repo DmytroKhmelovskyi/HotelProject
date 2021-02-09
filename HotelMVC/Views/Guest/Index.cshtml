@@ -1,6 +1,7 @@
-﻿@using Hotel.Shared.Models;
-@using HotelMVC;
-@model PaginatedList<Guest>
+﻿@using Hotel.Web.VIewModel;
+@using Hotel.Web;
+@using Hotel.Web.VIewModel;
+@model PaginatedList<GuestViewModel>
 @{
     ViewData["Title"] = "Guests";
 }
@@ -81,7 +82,7 @@
     </tbody>
 </table>
 
-@{
+@{ 
     var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
     var nextDisabled = !Model.HasNextPage ? "disabled" : "";
 }
@@ -89,14 +90,14 @@
 <a asp-action="Index"
    asp-route-sortOrder="@ViewData["CurrentSort"]"
    asp-route-pageNumber="@(Model.PageIndex - 1)"
-   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   asp-route-searchString="@ViewData["CurrentFilter"]"
    class="btn btn-default @prevDisabled">
     Previous
 </a>
 <a asp-action="Index"
    asp-route-sortOrder="@ViewData["CurrentSort"]"
    asp-route-pageNumber="@(Model.PageIndex + 1)"
-   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   asp-route-searchString="@ViewData["CurrentFilter"]"
    class="btn btn-default @nextDisabled">
     Next
 </a>

@@ -1,7 +1,7 @@
-﻿using ADOProject;
-using ADOProject.Services;
-using EntityFrameworkProgect;
-using EntityFrameworkProgect.Services;
+﻿using Hotel.AdoDAL;
+using Hotel.AdoDAL.Repositories;
+using Hotel.EntityFrameworkDAL;
+using Hotel.EntityFrameworkDAL.Repositories;
 using Hotel.ConsoleApp.Menus;
 using Hotel.Shared.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,23 +13,24 @@ namespace Hotel.ConsoleApp
     {
         static void Main(string[] args)
         {
+            var connectionString = "Server=(localdb)\\MSSQLLocalDB;Database=HotelDatabase;Trusted_Connection=True;";
             var services = new ServiceCollection();
-            services.AddEntityFrameworkServices();
-            services.AddAdoServices();
-            services.AddScoped<AdoServiceFactory>();
-            services.AddScoped<EntityFrameworkServiceFactory>();
+            services.AddEntityFrameworkServices(connectionString);
+            services.AddAdoServices(connectionString);
+            services.AddScoped<AdoRepositoryFactory>();
+            services.AddScoped<EntityFrameworkRepositoryFactory>();
 
             var provider = services.BuildServiceProvider();
             var menu = new ServiceProviderMenu();
             menu.Show();
             var response = menu.ReadResponse();
 
-            services.AddScoped<IServiceFactory>(s =>
+            services.AddScoped<IRepositoryFactory>(s =>
             {
                 switch (response)
                 {
-                    case "1": return provider.GetRequiredService<AdoServiceFactory>();
-                    case "2": return provider.GetRequiredService<EntityFrameworkServiceFactory>();
+                    case "1": return provider.GetRequiredService<AdoRepositoryFactory>();
+                    case "2": return provider.GetRequiredService<EntityFrameworkRepositoryFactory>();
                     default: throw new Exception("wrong key");
                 }
             });

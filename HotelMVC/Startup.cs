@@ -1,12 +1,16 @@
-using ADOProject;
-using EntityFrameworkProgect;
+using Hotel.AdoDAL;
+using AutoMapper;
+using Hotel.EntityFrameworkDAL;
+using Hotel.Web.Interfaces;
+using Hotel.Web.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
-namespace HotelMVC
+namespace Hotel.Web
 {
     public class Startup
     {
@@ -20,8 +24,22 @@ namespace HotelMVC
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-           services.AddAdoServices();
-            //services.AddEntityFrameworkServices();
+            var connectionString = Configuration.GetConnectionString("DefaultConnection");
+            services.AddAdoServices(connectionString);
+             //services.AddEntityFrameworkServices(connectionString);
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+            IMapper mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
+            services.AddMvc();
+            services.AddScoped<IGuestService, GuestService>();
+            services.AddScoped<IPaymentService, PaymentService>();
+            services.AddScoped<IReservationService, ReservationService>();
+            services.AddScoped<IRoomService, RoomService>();
+            services.AddScoped<IRoomStatusService, RoomStatusService>();
+            services.AddScoped<IRoomTypeService, RoomTypeService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

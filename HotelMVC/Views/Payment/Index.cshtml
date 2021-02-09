@@ -1,25 +1,21 @@
-﻿@using Hotel.Shared.Models;
-@using HotelMVC;
-@model PaginatedList<Payment>
+﻿@using Hotel.Web.VIewModel;
+@using Hotel.Web;
+@model PaginatedList<PaymentViewModel>
 @{
     ViewData["Title"] = "Payments";
 }
 
-<h1>Reservations</h1>
+<h1>Payments</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<form asp-action="Index" method="get">
-    <div class="form-actions no-color">
-    </div>
-</form>
 
 <table class="table">
     <thead>
         <tr>
             <th>
-                Guest Id
+                Guest 
             </th>
             <th>
                 Reservation Id
@@ -38,7 +34,7 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.GuestId)
+                    @Html.DisplayFor(modelItem => item.GuestName)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.ReservationId)

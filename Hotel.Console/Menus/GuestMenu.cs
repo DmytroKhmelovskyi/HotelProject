@@ -2,16 +2,15 @@
 using Hotel.Shared.Interfaces;
 using Hotel.Shared.Models;
 using System;
-using System.Collections.Generic;
 
 namespace Hotel.ConsoleApp.Menus
 {
     public class GuestMenu
     {
-        private readonly IGuestService guestService;
-        public GuestMenu(IServiceFactory services)
+        private readonly IGuestRepository guestService;
+        public GuestMenu(IRepositoryFactory services)
         {
-            this.guestService = services.GetGuestService();
+            this.guestService = services.GetGuestRepository();
         }
 
         public void Show()
