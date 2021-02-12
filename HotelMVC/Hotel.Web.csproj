@@ -9,7 +9,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Hotel.Web.NUnitTests\Hotel.Web.NUnitTests.csproj" />
     <ProjectReference Include="..\Hotel.AdoDAL\Hotel.AdoDAL.csproj" />
     <ProjectReference Include="..\Hotel.EntityFrameworkDAL\Hotel.EntityFrameworkDAL.csproj" />
     <ProjectReference Include="..\Hotel.Share\Hotel.Shared.csproj" />

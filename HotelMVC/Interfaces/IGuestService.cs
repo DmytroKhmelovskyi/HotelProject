@@ -11,7 +11,6 @@ namespace Hotel.Web.Interfaces
 {
    public interface IGuestService
     {
-        IEnumerable<GuestViewModel> ReadGuests();
 
         GuestViewModel AddGuest(GuestViewModel model);
         GuestViewModel UpdateGuests(int id, GuestViewModel model);

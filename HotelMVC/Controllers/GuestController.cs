@@ -16,16 +16,23 @@ namespace Hotel.Web.Controllers
         }
         public IActionResult Index(string sortOrder, int? pageNumber, string searchString)
         {
+            try
+            {
 
-            ViewData["CurrentSort"] = sortOrder;
-            ViewData["FirstNameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "fName" : "";
-            ViewData["LastNameSortParm"] = sortOrder == "Last Name" ? "lName_desc" : "Last Name";
-            ViewData["CurrentFilter"] = searchString;
-            int pageSize = 5;
-            pageNumber ??= 1;
-            var filter = new GuestFilter { Name = searchString, Take = pageSize, Skip = (pageNumber.Value - 1) * pageSize, SortOrder = sortOrder, };
-            var (guests, count) = guestService.ReadGuests(filter);
-            return View(PaginatedList<GuestViewModel>.Create(guests, count, pageNumber.Value, pageSize));
+                ViewData["CurrentSort"] = sortOrder;
+                ViewData["FirstNameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "fName" : "";
+                ViewData["LastNameSortParm"] = sortOrder == "Last Name" ? "lName_desc" : "Last Name";
+                ViewData["CurrentFilter"] = searchString;
+                int pageSize = 5;
+                pageNumber ??= 1;
+                var filter = new GuestFilter { Name = searchString, Take = pageSize, Skip = (pageNumber.Value - 1) * pageSize, SortOrder = sortOrder, };
+                var (guests, count) = guestService.ReadGuests(filter);
+                return View(PaginatedList<GuestViewModel>.Create(guests, count, pageNumber.Value, pageSize));
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
         [HttpGet]
         public IActionResult Create()
@@ -46,23 +53,28 @@ namespace Hotel.Web.Controllers
         [HttpGet]
         public IActionResult Details(int id)
         {
-            var guest = guestService.ReadSingle(id);
-            if (guest == null)
+            try
             {
-                return NotFound();
+                var guest = guestService.ReadSingle(id);
+                return View(guest);
             }
-
-            return View(guest);
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            var guest = guestService.ReadSingle(id);
-            if (guest == null)
+            try
             {
-                return NotFound();
+                var guest = guestService.ReadSingle(id);
+                return View(guest);
             }
-            return View(guest);
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPost]
@@ -79,9 +91,15 @@ namespace Hotel.Web.Controllers
         [HttpGet]
         public IActionResult Delete(int id)
         {
-            var guest = guestService.ReadSingle(id);
-            return View(guest);
-
+            try
+            {
+                var guest = guestService.ReadSingle(id);
+                return View(guest);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
         [HttpPost, ActionName("Delete")]
         public IActionResult DeleteConfirmed(int id)
