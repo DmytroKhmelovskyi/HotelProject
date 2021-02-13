@@ -14,13 +14,13 @@ namespace Hotel.Web.Controllers
         {
             this.roomStatusService = roomStatusService;
         }
-        public IActionResult Index(int? pageNumber)
+        public IActionResult Index(int? pageNumber, RoomStatusFilter roomStatusFilter)
         {
-            int pageSize = 5;
+            roomStatusFilter.Take = 5;
             pageNumber ??= 1;
-            var filter = new RoomStatusFilter { Take = pageSize, Skip = (pageNumber.Value - 1) * pageSize};
-            var (roomStatuses, count) = roomStatusService.ReadRoomStatuses(filter);
-            return View(PaginatedList<RoomStatusViewModel>.Create(roomStatuses, count, pageNumber.Value, pageSize));
+            roomStatusFilter.Skip = (pageNumber.Value - 1) * roomStatusFilter.Take;
+            var (roomStatuses, count) = roomStatusService.ReadRoomStatuses(roomStatusFilter);
+            return View(PaginatedList<RoomStatusViewModel>.Create(roomStatuses, count, pageNumber.Value, roomStatusFilter.Take));
         }
         [HttpGet]
         public IActionResult Create()

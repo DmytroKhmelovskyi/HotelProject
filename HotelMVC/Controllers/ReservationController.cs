@@ -18,21 +18,16 @@ namespace Hotel.Web.Controllers
         {
             this.reservationService = reservationService;
         }
-        public IActionResult Index(string sortOrder, int? pageNumber)
+        public IActionResult Index(int? pageNumber, ReservationFilter reservationFilter)
         {
-            ViewData["CurrentSort"] = sortOrder;
-            ViewData["CheckInDateSortParm"] = String.IsNullOrEmpty(sortOrder) ? "CheckInDate" : "";
-            ViewData["CheckOutDateSortParm"] = sortOrder == "CheckOutDate" ? "CheckOutDate" : "CheckOutDate";
-            int pageSize = 5;
+            ViewData["CurrentSort"] = reservationFilter.SortOrder;
+            ViewData["CheckInDateSortParm"] = String.IsNullOrEmpty(reservationFilter.SortOrder) ? "CheckInDate" : "";
+            ViewData["CheckOutDateSortParm"] = reservationFilter.SortOrder == "CheckOutDate" ? "CheckOutDate" : "CheckOutDate";
+            reservationFilter.Take = 5;
             pageNumber ??= 1;
-            var filter = new ReservationFilter
-            {
-                Take = pageSize,
-                Skip = (pageNumber.Value - 1) * pageSize,
-                SortOrder = sortOrder,
-            };
-            var (reservations, count) = reservationService.ReadReservations(filter);
-            return View(PaginatedList<ReservationViewModel>.Create(reservations, count, pageNumber.Value, pageSize));
+            reservationFilter.Skip = (pageNumber.Value - 1) * reservationFilter.Take;
+            var (reservations, count) = reservationService.ReadReservations(reservationFilter);
+            return View(PaginatedList<ReservationViewModel>.Create(reservations, count, pageNumber.Value, reservationFilter.Take));
         }
         [HttpGet]
         public IActionResult Create()

@@ -14,20 +14,21 @@ namespace Hotel.Web.Controllers
         {
             this.guestService = guestService;
         }
-        public IActionResult Index(string sortOrder, int? pageNumber, string searchString)
+        public IActionResult Index( string searchString, int? pageNumber,  GuestFilter guestFilter)
         {
             try
             {
 
-                ViewData["CurrentSort"] = sortOrder;
-                ViewData["FirstNameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "fName" : "";
-                ViewData["LastNameSortParm"] = sortOrder == "Last Name" ? "lName_desc" : "Last Name";
+                ViewData["CurrentSort"] = guestFilter.SortOrder;
+                ViewData["FirstNameSortParm"] = String.IsNullOrEmpty(guestFilter.SortOrder) ? "fName" : "";
+                ViewData["LastNameSortParm"] = guestFilter.SortOrder == "Last Name" ? "lName_desc" : "Last Name";
                 ViewData["CurrentFilter"] = searchString;
-                int pageSize = 5;
+                guestFilter.Name = searchString;
+                guestFilter.Take = 5;
                 pageNumber ??= 1;
-                var filter = new GuestFilter { Name = searchString, Take = pageSize, Skip = (pageNumber.Value - 1) * pageSize, SortOrder = sortOrder, };
-                var (guests, count) = guestService.ReadGuests(filter);
-                return View(PaginatedList<GuestViewModel>.Create(guests, count, pageNumber.Value, pageSize));
+                guestFilter.Skip = (pageNumber.Value - 1) * guestFilter.Take;
+                var (guests, count) = guestService.ReadGuests(guestFilter);
+                return View(PaginatedList<GuestViewModel>.Create(guests, count, pageNumber.Value, guestFilter.Take));
             }
             catch (Exception)
             {

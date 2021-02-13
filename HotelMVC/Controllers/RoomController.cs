@@ -18,16 +18,16 @@ namespace Hotel.Web.Controllers
         {
             this.roomService = roomService;
         }
-        public IActionResult Index(string sortOrder, int? pageNumber)
+        public IActionResult Index(int? pageNumber, RoomFilter roomFilter)
         {
-            ViewData["CurrentSort"] = sortOrder;
-            ViewData["RoomNumberSortParm"] = String.IsNullOrEmpty(sortOrder) ? "roomNumber" : "";
-            ViewData["MaxPersonSortParm"] = sortOrder == "MaxPerson" ? "maxPerson" : "MaxPerson";
-            int pageSize = 5;
+            ViewData["CurrentSort"] = roomFilter.SortOrder;
+            ViewData["RoomNumberSortParm"] = String.IsNullOrEmpty(roomFilter.SortOrder) ? "roomNumber" : "";
+            ViewData["MaxPersonSortParm"] = roomFilter.SortOrder == "MaxPerson" ? "maxPerson" : "MaxPerson";
+            roomFilter.Take = 5;
             pageNumber ??= 1;
-            var filter = new RoomFilter {Take = pageSize, Skip = (pageNumber.Value - 1) * pageSize, SortOrder = sortOrder, };
-            var (rooms, count) = roomService.ReadRooms(filter);
-            return View(PaginatedList<RoomViewModel>.Create(rooms, count, pageNumber.Value, pageSize));
+            roomFilter.Skip = (pageNumber.Value - 1) * roomFilter.Take;
+            var (rooms, count) = roomService.ReadRooms(roomFilter);
+            return View(PaginatedList<RoomViewModel>.Create(rooms, count, pageNumber.Value, roomFilter.Take));
         }
         [HttpGet]
         public IActionResult Create()

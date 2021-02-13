@@ -18,17 +18,17 @@ namespace Hotel.Web.Controllers
         {
             this.paymentService = paymentService;
         }
-        public IActionResult Index(string sortOrder, int? pageNumber)
+        public IActionResult Index(int? pageNumber, PaymentFilter paymentFilter)
         {
 
-            ViewData["CurrentSort"] = sortOrder;
-            ViewData["AmountSortParm"] = String.IsNullOrEmpty(sortOrder) ? "amount" : "";
-            ViewData["PayTimeSortParm"] = sortOrder == "PayTime" ? "payTime" : "PayTime";
-            int pageSize = 5;
+            ViewData["CurrentSort"] = paymentFilter.SortOrder;
+            ViewData["AmountSortParm"] = String.IsNullOrEmpty(paymentFilter.SortOrder) ? "amount" : "";
+            ViewData["PayTimeSortParm"] = paymentFilter.SortOrder == "PayTime" ? "payTime" : "PayTime";
+            paymentFilter.Take = 5;
             pageNumber ??= 1;
-            var filter = new PaymentFilter {Take = pageSize, Skip = (pageNumber.Value - 1) * pageSize, SortOrder = sortOrder, };
-            var (payments, count) = paymentService.ReadPayments(filter);
-            return View(PaginatedList<PaymentViewModel>.Create(payments, count, pageNumber.Value, pageSize));
+            paymentFilter.Skip = (pageNumber.Value - 1) * paymentFilter.Take;
+            var (payments, count) = paymentService.ReadPayments(paymentFilter);
+            return View(PaginatedList<PaymentViewModel>.Create(payments, count, pageNumber.Value, paymentFilter.Take));
         }
         [HttpGet]
         public IActionResult Create()

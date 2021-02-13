@@ -41,7 +41,7 @@ namespace Hotel.Web.NUnitTests
             //Arrange
             var guest = new GuestViewModel();
             var mock = new Mock<IGuestService>();
-            mock.Setup(i => i.AddGuest(guest));
+            mock.Setup(g => g.AddGuest(guest));
             var controller = new GuestController(mock.Object);
             //Act
             ViewResult result = controller.Create() as ViewResult;
@@ -57,7 +57,7 @@ namespace Hotel.Web.NUnitTests
             // Arrange
             var testGuest = new GuestViewModel();
             var guestsRepo = new Mock<IGuestService>();
-            guestsRepo.Setup(o => o.AddGuest(It.IsAny<GuestViewModel>()));
+            guestsRepo.Setup(g => g.AddGuest(It.IsAny<GuestViewModel>()));
             var controller = new GuestController(guestsRepo.Object);
 
             // Act
@@ -74,7 +74,7 @@ namespace Hotel.Web.NUnitTests
             // Arrange
             var testGuest = new GuestViewModel();
             var guestsRepo = new Mock<IGuestService>();
-            guestsRepo.Setup(o => o.AddGuest(It.IsAny<GuestViewModel>()));
+            guestsRepo.Setup(g => g.AddGuest(It.IsAny<GuestViewModel>()));
             var controller = new GuestController(guestsRepo.Object);
             controller.ModelState.AddModelError("", "");
 
@@ -94,7 +94,7 @@ namespace Hotel.Web.NUnitTests
             var guestId = 1;
             var testGuest = new GuestViewModel() { Id = guestId };
             var guestsRepo = new Mock<IGuestService>();
-            guestsRepo.Setup(o => o.ReadSingle(guestId)).Returns(testGuest);
+            guestsRepo.Setup(g => g.ReadSingle(guestId)).Returns(testGuest);
             var controller = new GuestController(guestsRepo.Object);
 
             // Act
@@ -111,7 +111,7 @@ namespace Hotel.Web.NUnitTests
         {
             // Arrange
             var guestsRepo = new Mock<IGuestService>();
-            guestsRepo.Setup(o => o.ReadSingle(It.IsAny<int>())).Throws(It.IsAny<Exception>());
+            guestsRepo.Setup(g => g.ReadSingle(It.IsAny<int>())).Throws(It.IsAny<Exception>());
             var controller = new GuestController(guestsRepo.Object);
 
             // Act
