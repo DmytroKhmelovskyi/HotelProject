@@ -1,8 +1,9 @@
-﻿using Hotel.Shared.FilterModels;
-using Hotel.Shared.Interfaces;
-using Hotel.Web.Interfaces;
-using Hotel.Web.VIewModel;
+﻿using Hotel.BL.Interfaces;
+using Hotel.Shared.FilterModels;
 using Microsoft.AspNetCore.Mvc;
+using Hotel.BL.Models;
+using Hotel.BL.Services;
+using System;
 
 namespace Hotel.Web.Controllers
 {
@@ -15,11 +16,18 @@ namespace Hotel.Web.Controllers
         }
         public IActionResult Index(int? pageNumber, RoomTypeFilter roomTypeFilter)
         {
-            roomTypeFilter.Take = 5;
-            pageNumber ??= 1;
-            roomTypeFilter.Skip = (pageNumber.Value - 1) * roomTypeFilter.Take;
-            var (roomTypes, count) = roomTypeService.ReadRoomTypes(roomTypeFilter);
-            return View(PaginatedList<RoomTypeViewModel>.Create(roomTypes, count, pageNumber.Value, roomTypeFilter.Take));
+            try
+            {
+                roomTypeFilter.Take = 5;
+                pageNumber ??= 1;
+                roomTypeFilter.Skip = (pageNumber.Value - 1) * roomTypeFilter.Take;
+                var (roomTypes, count) = roomTypeService.ReadRoomTypes(roomTypeFilter);
+                return View(PaginatedList<RoomTypeViewModel>.Create(roomTypes, count, pageNumber.Value, roomTypeFilter.Take));
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
         [HttpGet]
         public IActionResult Create()
@@ -40,25 +48,28 @@ namespace Hotel.Web.Controllers
         [HttpGet]
         public IActionResult Details(int id)
         {
-
-            var roomType = roomTypeService.ReadSingle(id);
-            if (roomType == null)
+            try
             {
-                return NotFound();
+                var roomType = roomTypeService.ReadSingle(id);
+                return View(roomType);
             }
-
-            return View(roomType);
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
         [HttpGet]
         public IActionResult Edit(int id)
         {
-
-            var roomType = roomTypeService.ReadSingle(id);
-            if (roomType == null)
+            try
             {
-                return NotFound();
+                var roomType = roomTypeService.ReadSingle(id);
+                return View(roomType);
             }
-            return View(roomType);
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPost]
@@ -74,12 +85,15 @@ namespace Hotel.Web.Controllers
         [HttpGet]
         public IActionResult Delete(int id)
         {
-            var roomType = roomTypeService.ReadSingle(id);
-            if (roomType == null)
+            try
             {
-                return NotFound();
+                var roomType = roomTypeService.ReadSingle(id);
+                return View(roomType);
             }
-            return View(roomType);
+            catch (Exception)
+            {
+                return BadRequest();
+            }
 
         }
         [HttpPost, ActionName("Delete")]

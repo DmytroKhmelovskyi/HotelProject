@@ -15,8 +15,8 @@ namespace Hotel.ConsoleApp
         {
             var connectionString = "Server=(localdb)\\MSSQLLocalDB;Database=HotelDatabase;Trusted_Connection=True;";
             var services = new ServiceCollection();
-            services.AddEntityFrameworkServices(connectionString);
-            services.AddAdoServices(connectionString);
+            services.AddEntityFrameworkRepositories(connectionString);
+            services.AddAdoRepositories(connectionString);
             services.AddScoped<AdoRepositoryFactory>();
             services.AddScoped<EntityFrameworkRepositoryFactory>();
 

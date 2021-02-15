@@ -1,9 +1,9 @@
-﻿using Hotel.Shared.FilterModels;
-using Hotel.Shared.Interfaces;
-using Hotel.Shared.Models;
-using Hotel.Web.Interfaces;
-using Hotel.Web.VIewModel;
+﻿using Hotel.BL.Interfaces;
+using Hotel.BL.Models;
+using Hotel.BL.Services;
+using Hotel.Shared.FilterModels;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace Hotel.Web.Controllers
 {
@@ -16,11 +16,18 @@ namespace Hotel.Web.Controllers
         }
         public IActionResult Index(int? pageNumber, RoomStatusFilter roomStatusFilter)
         {
-            roomStatusFilter.Take = 5;
-            pageNumber ??= 1;
-            roomStatusFilter.Skip = (pageNumber.Value - 1) * roomStatusFilter.Take;
-            var (roomStatuses, count) = roomStatusService.ReadRoomStatuses(roomStatusFilter);
-            return View(PaginatedList<RoomStatusViewModel>.Create(roomStatuses, count, pageNumber.Value, roomStatusFilter.Take));
+            try
+            {
+                roomStatusFilter.Take = 5;
+                pageNumber ??= 1;
+                roomStatusFilter.Skip = (pageNumber.Value - 1) * roomStatusFilter.Take;
+                var (roomStatuses, count) = roomStatusService.ReadRoomStatuses(roomStatusFilter);
+                return View(PaginatedList<RoomStatusViewModel>.Create(roomStatuses, count, pageNumber.Value, roomStatusFilter.Take));
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
         [HttpGet]
         public IActionResult Create()
@@ -41,25 +48,28 @@ namespace Hotel.Web.Controllers
         [HttpGet]
         public IActionResult Details(int id)
         {
-
-            var roomStatus = roomStatusService.ReadSingle(id);
-            if (roomStatus == null)
+            try
             {
-                return NotFound();
+                var roomStatus = roomStatusService.ReadSingle(id);
+                return View(roomStatus);
             }
-
-            return View(roomStatus);
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
         [HttpGet]
         public IActionResult Edit(int id)
         {
-
-            var roomStatus = roomStatusService.ReadSingle(id);
-            if (roomStatus == null)
+            try
             {
-                return NotFound();
+                var roomStatus = roomStatusService.ReadSingle(id);
+                return View(roomStatus);
             }
-            return View(roomStatus);
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPost]
@@ -75,12 +85,15 @@ namespace Hotel.Web.Controllers
         [HttpGet]
         public IActionResult Delete(int id)
         {
-            var roomStatus = roomStatusService.ReadSingle(id);
-            if (roomStatus == null)
+            try
             {
-                return NotFound();
+                var roomStatus = roomStatusService.ReadSingle(id);
+                return View(roomStatus);
             }
-            return View(roomStatus);
+            catch (Exception)
+            {
+                return BadRequest();
+            }
 
         }
         [HttpPost, ActionName("Delete")]

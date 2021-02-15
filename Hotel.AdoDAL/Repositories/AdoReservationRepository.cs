@@ -47,22 +47,31 @@ namespace Hotel.AdoDAL.Repositories
 
         public Reservation DeleteReservation(int id)
         {
-            var reservation = new Reservation();
-            using (var conn = new SqlConnection(connectionString))
+            if (!IsReservationExist(id) && !id.Equals(null))
             {
-                var cmd = new SqlCommand();
-                cmd.Connection = conn;
-
-                cmd.CommandText = "DELETE FROM Reservations WHERE Id = @Id ";
-                cmd.Parameters.AddWithValue("@Id", id);
-
-                if (conn.State != ConnectionState.Open)
+                var reservation = new Reservation();
+                using (var conn = new SqlConnection(connectionString))
                 {
-                    conn.Open();
+                    var cmd = new SqlCommand();
+                    cmd.Connection = conn;
+
+                    cmd.CommandText = "DELETE FROM Reservations WHERE Id = @Id ";
+                    cmd.Parameters.AddWithValue("@Id", id);
+
+                    if (conn.State != ConnectionState.Open)
+                    {
+                        conn.Open();
+                    }
+                    cmd.ExecuteNonQuery();
                 }
-                cmd.ExecuteNonQuery();
+                return reservation;
             }
-            return reservation;
+            else
+            {
+
+                throw new Exception("There is no such an reservation in a database");
+
+            }
         }
 
         public (IEnumerable<Reservation>, int) ReadReservations(ReservationFilter filter)
@@ -205,30 +214,57 @@ namespace Hotel.AdoDAL.Repositories
 
         public Reservation UpdateReservation(int id, Reservation reservation)
         {
+            if (!IsReservationExist(id) && !id.Equals(null))
+            {
+                using (var conn = new SqlConnection(connectionString))
+                {
+                    var cmd = new SqlCommand();
+                    cmd.Connection = conn;
+
+                    cmd.CommandText = $"UPDATE Reservations SET GuestId = '{reservation.GuestId}', RoomId = '{reservation.RoomId}', ReservationDate = '{reservation.ReservationDate}', " +
+                        $"CheckInDate = '{reservation.CheckInDate}', CheckOutDate = '{reservation.CheckOutDate}', PersonCount = '{reservation}' WHERE Id = {id}";
+                    reservation.Id = id;
+                    cmd.Parameters.AddWithValue("@id", reservation.Id);
+                    cmd.Parameters.AddWithValue("@guestId", reservation.GuestId);
+                    cmd.Parameters.AddWithValue("@roomId", reservation.RoomId);
+                    cmd.Parameters.AddWithValue("@reservationDate", reservation.ReservationDate);
+                    cmd.Parameters.AddWithValue("@checkInDate", reservation.CheckInDate);
+                    cmd.Parameters.AddWithValue("@checkOutDate", reservation.CheckOutDate);
+                    cmd.Parameters.AddWithValue("@personCount", reservation.PersonCount);
+
+                    if (conn.State != ConnectionState.Open)
+                    {
+                        conn.Open();
+                    }
+
+                    cmd.ExecuteNonQuery();
+                }
+                return reservation;
+            }
+            else
+            {
+
+                throw new Exception("There is no such an reservation in a database");
+
+            }
+        }
+        private bool IsReservationExist(int id)
+        {
             using (var conn = new SqlConnection(connectionString))
             {
-                var cmd = new SqlCommand();
-                cmd.Connection = conn;
-
-                cmd.CommandText = $"UPDATE Reservations SET GuestId = '{reservation.GuestId}', RoomId = '{reservation.RoomId}', ReservationDate = '{reservation.ReservationDate}', " +
-                    $"CheckInDate = '{reservation.CheckInDate}', CheckOutDate = '{reservation.CheckOutDate}', PersonCount = '{reservation}' WHERE Id = {id}";
-                reservation.Id = id;
-                cmd.Parameters.AddWithValue("@id", reservation.Id);
-                cmd.Parameters.AddWithValue("@guestId", reservation.GuestId);
-                cmd.Parameters.AddWithValue("@roomId", reservation.RoomId);
-                cmd.Parameters.AddWithValue("@reservationDate", reservation.ReservationDate);
-                cmd.Parameters.AddWithValue("@checkInDate", reservation.CheckInDate);
-                cmd.Parameters.AddWithValue("@checkOutDate", reservation.CheckOutDate);
-                cmd.Parameters.AddWithValue("@personCount", reservation.PersonCount);
-
                 if (conn.State != ConnectionState.Open)
                 {
                     conn.Open();
                 }
-
-                cmd.ExecuteNonQuery();
+                SqlDataAdapter da = new SqlDataAdapter($"SELECT * FROM Reservations WHERE Id = {id}", conn);
+                DataSet ds1 = new DataSet();
+                da.Fill(ds1);
+                int i = ds1.Tables[0].Rows.Count;
+                if (i > 0)
+                    return true;
+                else
+                    return false;
             }
-            return reservation;
         }
     }
 }

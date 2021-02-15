@@ -9,8 +9,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Hotel.AdoDAL\Hotel.AdoDAL.csproj" />
-    <ProjectReference Include="..\Hotel.EntityFrameworkDAL\Hotel.EntityFrameworkDAL.csproj" />
+    <ProjectReference Include="..\AutoMapperibrary\Hotel.AutoMapperLibrary.csproj" />
+    <ProjectReference Include="..\Hotel.BL.Models\Hotel.BL.Models.csproj" />
+    <ProjectReference Include="..\Hotel.BL\Hotel.BL.csproj" />
     <ProjectReference Include="..\Hotel.Share\Hotel.Shared.csproj" />
   </ItemGroup>
 

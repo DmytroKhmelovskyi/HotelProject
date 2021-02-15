@@ -41,22 +41,31 @@ namespace Hotel.AdoDAL.Repositories
 
         public RoomStatus DeleteRoomStatus(int id)
         {
-            var roomStatus = new RoomStatus();
-            using (var conn = new SqlConnection(connectionString))
+            if (!IsRoomStatusExist(id) && id.Equals(null))
             {
-                var cmd = new SqlCommand();
-                cmd.Connection = conn;
-
-                cmd.CommandText = "DELETE FROM RoomStatuses WHERE Id = @Id";
-                cmd.Parameters.AddWithValue("@Id", id);
-
-                if (conn.State != ConnectionState.Open)
+                var roomStatus = new RoomStatus();
+                using (var conn = new SqlConnection(connectionString))
                 {
-                    conn.Open();
+                    var cmd = new SqlCommand();
+                    cmd.Connection = conn;
+
+                    cmd.CommandText = "DELETE FROM RoomStatuses WHERE Id = @Id";
+                    cmd.Parameters.AddWithValue("@Id", id);
+
+                    if (conn.State != ConnectionState.Open)
+                    {
+                        conn.Open();
+                    }
+                    cmd.ExecuteNonQuery();
                 }
-                cmd.ExecuteNonQuery();
+                return roomStatus;
             }
-            return roomStatus;
+            else
+            {
+
+                throw new Exception("There is no such an roomStatus in a database");
+
+            }
         }
 
         public IEnumerable<RoomStatus> ReadRoomStatuses()
@@ -171,23 +180,50 @@ namespace Hotel.AdoDAL.Repositories
 
         public RoomStatus UpdateRoomStatus(int id, RoomStatus roomStatus)
         {
+            if (!IsRoomStatusExist(id) && !id.Equals(null))
+            {
+                using (var conn = new SqlConnection(connectionString))
+                {
+                    var cmd = new SqlCommand();
+                    cmd.Connection = conn;
+
+                    cmd.CommandText = $"UPDATE RoomStatuses SET Status = '{roomStatus.Status}'";
+                    cmd.Parameters.AddWithValue("@id", roomStatus.Id);
+                    cmd.Parameters.AddWithValue("@RoomStatus", roomStatus.Status);
+
+                    if (conn.State != ConnectionState.Open)
+                    {
+                        conn.Open();
+                    }
+
+                    cmd.ExecuteNonQuery();
+                }
+                return roomStatus;
+            }
+            else
+            {
+
+                throw new Exception("There is no such an roomStatus in a database");
+
+            }
+        }
+        private bool IsRoomStatusExist(int id)
+        {
             using (var conn = new SqlConnection(connectionString))
             {
-                var cmd = new SqlCommand();
-                cmd.Connection = conn;
-
-                cmd.CommandText = $"UPDATE RoomStatuses SET Status = '{roomStatus.Status}'";
-                cmd.Parameters.AddWithValue("@id", roomStatus.Id);
-                cmd.Parameters.AddWithValue("@RoomStatus", roomStatus.Status);
-
                 if (conn.State != ConnectionState.Open)
                 {
                     conn.Open();
                 }
-
-                cmd.ExecuteNonQuery();
+                SqlDataAdapter da = new SqlDataAdapter($"SELECT * FROM RoomStatuses WHERE Id = {id}", conn);
+                DataSet ds1 = new DataSet();
+                da.Fill(ds1);
+                int i = ds1.Tables[0].Rows.Count;
+                if (i > 0)
+                    return true;
+                else
+                    return false;
             }
-            return roomStatus;
         }
     }
 }

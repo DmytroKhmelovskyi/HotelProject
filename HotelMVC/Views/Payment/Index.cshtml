@@ -1,5 +1,5 @@
-﻿@using Hotel.Web.VIewModel;
-@using Hotel.Web;
+﻿@using Hotel.BL.Models;
+@using Hotel.BL.Services;
 @model PaginatedList<PaymentViewModel>
 @{
     ViewData["Title"] = "Payments";
@@ -15,7 +15,7 @@
     <thead>
         <tr>
             <th>
-                Guest 
+                Guest
             </th>
             <th>
                 Reservation Id

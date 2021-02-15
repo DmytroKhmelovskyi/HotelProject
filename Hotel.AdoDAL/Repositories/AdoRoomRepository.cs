@@ -44,22 +44,31 @@ namespace Hotel.AdoDAL.Repositories
 
         public Room DeleteRoom(int id)
         {
-            var room = new Room();
-            using (var conn = new SqlConnection(connectionString))
+            if (!IsRoomExist(id) && !id.Equals(null))
             {
-                var cmd = new SqlCommand();
-                cmd.Connection = conn;
-
-                cmd.CommandText = "DELETE FROM Rooms WHERE Id = @Id";
-                cmd.Parameters.AddWithValue("@Id", id);
-
-                if (conn.State != ConnectionState.Open)
+                var room = new Room();
+                using (var conn = new SqlConnection(connectionString))
                 {
-                    conn.Open();
+                    var cmd = new SqlCommand();
+                    cmd.Connection = conn;
+
+                    cmd.CommandText = "DELETE FROM Rooms WHERE Id = @Id";
+                    cmd.Parameters.AddWithValue("@Id", id);
+
+                    if (conn.State != ConnectionState.Open)
+                    {
+                        conn.Open();
+                    }
+                    cmd.ExecuteNonQuery();
                 }
-                cmd.ExecuteNonQuery();
+                return room;
             }
-            return room;
+            else
+            {
+
+                throw new Exception("There is no such an room in a database");
+
+            }
         }
 
         public IEnumerable<Room> ReadRooms()
@@ -210,27 +219,54 @@ namespace Hotel.AdoDAL.Repositories
 
         public Room UpdateRoom(int id, Room room)
         {
-            var rooms = new List<Room>();
+            if (!IsRoomExist(id) && !id.Equals(null))
+            {
+                var rooms = new List<Room>();
+                using (var conn = new SqlConnection(connectionString))
+                {
+                    var cmd = new SqlCommand();
+                    cmd.Connection = conn;
+
+                    cmd.CommandText = $"UPDATE Rooms SET RoomTypeId = '{room.RoomTypeId}', RoomStatusId = '{room.RoomStatusId}', RoomNumber = '{room.RoomNumber}', MaxPerson = '{room.MaxPerson}'";
+                    cmd.Parameters.AddWithValue("@id", room.Id);
+                    cmd.Parameters.AddWithValue("@RoomTypeId", room.RoomTypeId);
+                    cmd.Parameters.AddWithValue("@RoomStatusId", room.RoomStatusId);
+                    cmd.Parameters.AddWithValue("@RoomNumber", room.RoomNumber);
+                    cmd.Parameters.AddWithValue("@MaxPerson", room.MaxPerson);
+
+                    if (conn.State != ConnectionState.Open)
+                    {
+                        conn.Open();
+                    }
+
+                    cmd.ExecuteNonQuery();
+                }
+                return room;
+            }
+            else
+            {
+
+                throw new Exception("There is no such an room in a database");
+
+            }
+        }
+        private bool IsRoomExist(int id)
+        {
             using (var conn = new SqlConnection(connectionString))
             {
-                var cmd = new SqlCommand();
-                cmd.Connection = conn;
-
-                cmd.CommandText = $"UPDATE Rooms SET RoomTypeId = '{room.RoomTypeId}', RoomStatusId = '{room.RoomStatusId}', RoomNumber = '{room.RoomNumber}', MaxPerson = '{room.MaxPerson}'";
-                cmd.Parameters.AddWithValue("@id", room.Id);
-                cmd.Parameters.AddWithValue("@RoomTypeId", room.RoomTypeId);
-                cmd.Parameters.AddWithValue("@RoomStatusId", room.RoomStatusId);
-                cmd.Parameters.AddWithValue("@RoomNumber", room.RoomNumber);
-                cmd.Parameters.AddWithValue("@MaxPerson", room.MaxPerson);
-
                 if (conn.State != ConnectionState.Open)
                 {
                     conn.Open();
                 }
-
-                cmd.ExecuteNonQuery();
+                SqlDataAdapter da = new SqlDataAdapter($"SELECT * FROM Rooms WHERE Id = {id}", conn);
+                DataSet ds1 = new DataSet();
+                da.Fill(ds1);
+                int i = ds1.Tables[0].Rows.Count;
+                if (i > 0)
+                    return true;
+                else
+                    return false;
             }
-            return room;
         }
     }
 }

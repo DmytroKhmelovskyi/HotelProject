@@ -44,22 +44,29 @@ namespace Hotel.AdoDAL.Repositories
 
         public Payment DeletePayment(int id)
         {
-            var payment = new Payment();
-            using (var conn = new SqlConnection(connectionString))
+            if (!IsPaymentExist(id) && !id.Equals(null))
             {
-                var cmd = new SqlCommand();
-                cmd.Connection = conn;
-
-                cmd.CommandText = "DELETE FROM Payments WHERE Id = @Id";
-                cmd.Parameters.AddWithValue("@Id", id);
-
-                if (conn.State != ConnectionState.Open)
+                var payment = new Payment();
+                using (var conn = new SqlConnection(connectionString))
                 {
-                    conn.Open();
+                    var cmd = new SqlCommand();
+                    cmd.Connection = conn;
+
+                    cmd.CommandText = "DELETE FROM Payments WHERE Id = @Id";
+                    cmd.Parameters.AddWithValue("@Id", id);
+
+                    if (conn.State != ConnectionState.Open)
+                    {
+                        conn.Open();
+                    }
+                    cmd.ExecuteNonQuery();
                 }
-                cmd.ExecuteNonQuery();
+                return payment;
             }
-            return payment;
+            else
+            {
+                throw new Exception("There is no such an payment in a database");
+            }
         }
 
         public IEnumerable<Payment> ReadPayments()
@@ -97,7 +104,7 @@ namespace Hotel.AdoDAL.Repositories
                 return payments;
             }
         }
-        public (IEnumerable<Payment> , int) ReadPayments(PaymentFilter filter)
+        public (IEnumerable<Payment>, int) ReadPayments(PaymentFilter filter)
         {
             var payments = new List<Payment>();
             var count = 0;
@@ -202,26 +209,52 @@ namespace Hotel.AdoDAL.Repositories
 
         public Payment UpdatePayment(int id, Payment payment)
         {
+            if (!IsPaymentExist(id) && !id.Equals(null))
+            {
+                using (var conn = new SqlConnection(connectionString))
+                {
+                    var cmd = new SqlCommand();
+                    cmd.Connection = conn;
+
+                    cmd.CommandText = $"UPDATE Payments SET GuestId = '{payment.GuestId}', ReservationId = '{payment.ReservationId}', Amount = '{payment.Amount}', PayTime = '{payment.PayTime}' WHERE Id = {id}";
+                    cmd.Parameters.AddWithValue("@id", payment.Id);
+                    cmd.Parameters.AddWithValue("@GuestId", payment.GuestId);
+                    cmd.Parameters.AddWithValue("@ReservationId", payment.ReservationId);
+                    cmd.Parameters.AddWithValue("@Amount", payment.Amount);
+                    cmd.Parameters.AddWithValue("@PayTime", payment.PayTime);
+
+                    if (conn.State != ConnectionState.Open)
+                    {
+                        conn.Open();
+                    }
+
+                    cmd.ExecuteNonQuery();
+                }
+                return payment;
+            }
+            else
+            {
+                throw new Exception("There is no such an payment in a database");
+            }
+        }
+
+        private bool IsPaymentExist(int id)
+        {
             using (var conn = new SqlConnection(connectionString))
             {
-                var cmd = new SqlCommand();
-                cmd.Connection = conn;
-
-                cmd.CommandText = $"UPDATE Payments SET GuestId = '{payment.GuestId}', ReservationId = '{payment.ReservationId}', Amount = '{payment.Amount}', PayTime = '{payment.PayTime}' WHERE Id = {id}";
-                cmd.Parameters.AddWithValue("@id", payment.Id);
-                cmd.Parameters.AddWithValue("@GuestId", payment.GuestId);
-                cmd.Parameters.AddWithValue("@ReservationId", payment.ReservationId);
-                cmd.Parameters.AddWithValue("@Amount", payment.Amount);
-                cmd.Parameters.AddWithValue("@PayTime", payment.PayTime);
-
                 if (conn.State != ConnectionState.Open)
                 {
                     conn.Open();
                 }
-
-                cmd.ExecuteNonQuery();
+                SqlDataAdapter da = new SqlDataAdapter($"SELECT * FROM Payments WHERE Id = {id}", conn);
+                DataSet ds1 = new DataSet();
+                da.Fill(ds1);
+                int i = ds1.Tables[0].Rows.Count;
+                if (i > 0)
+                    return true;
+                else
+                    return false;
             }
-            return payment;
         }
     }
 }

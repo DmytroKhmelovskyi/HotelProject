@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Hotel.BL.Interfaces;
 using Hotel.Shared.FilterModels;
-using Hotel.Shared.Interfaces;
-using Hotel.Shared.Models;
-using Hotel.Web.Interfaces;
-using Hotel.Web.VIewModel;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using Hotel.BL.Services;
+using Hotel.BL.Models;
 
 namespace Hotel.Web.Controllers
 {
@@ -20,14 +16,21 @@ namespace Hotel.Web.Controllers
         }
         public IActionResult Index(int? pageNumber, ReservationFilter reservationFilter)
         {
-            ViewData["CurrentSort"] = reservationFilter.SortOrder;
-            ViewData["CheckInDateSortParm"] = String.IsNullOrEmpty(reservationFilter.SortOrder) ? "CheckInDate" : "";
-            ViewData["CheckOutDateSortParm"] = reservationFilter.SortOrder == "CheckOutDate" ? "CheckOutDate" : "CheckOutDate";
-            reservationFilter.Take = 5;
-            pageNumber ??= 1;
-            reservationFilter.Skip = (pageNumber.Value - 1) * reservationFilter.Take;
-            var (reservations, count) = reservationService.ReadReservations(reservationFilter);
-            return View(PaginatedList<ReservationViewModel>.Create(reservations, count, pageNumber.Value, reservationFilter.Take));
+            try
+            {
+                ViewData["CurrentSort"] = reservationFilter.SortOrder;
+                ViewData["CheckInDateSortParm"] = String.IsNullOrEmpty(reservationFilter.SortOrder) ? "CheckInDate" : "";
+                ViewData["CheckOutDateSortParm"] = reservationFilter.SortOrder == "CheckOutDate" ? "CheckOutDate" : "CheckOutDate";
+                reservationFilter.Take = 5;
+                pageNumber ??= 1;
+                reservationFilter.Skip = (pageNumber.Value - 1) * reservationFilter.Take;
+                var (reservations, count) = reservationService.ReadReservations(reservationFilter);
+                return View(PaginatedList<ReservationViewModel>.Create(reservations, count, pageNumber.Value, reservationFilter.Take));
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
         [HttpGet]
         public IActionResult Create()
@@ -48,24 +51,28 @@ namespace Hotel.Web.Controllers
         [HttpGet]
         public IActionResult Details(int? id)
         {
-
-            var reservation = reservationService.ReadSingle(id);
-            if (reservation == null)
+            try
             {
-                return NotFound();
+                var reservation = reservationService.ReadSingle(id);
+                return View(reservation);
             }
-
-            return View(reservation);
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
         [HttpGet]
         public IActionResult Edit(int? id)
         {
-            var reservation = reservationService.ReadSingle(id);
-            if (reservation == null)
+            try
             {
-                return NotFound();
+                var reservation = reservationService.ReadSingle(id);
+                return View(reservation);
             }
-            return View(reservation);
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPost]
@@ -81,13 +88,15 @@ namespace Hotel.Web.Controllers
         [HttpGet]
         public IActionResult Delete(int? id)
         {
-            var reservation = reservationService.ReadSingle(id);
-            if (reservation == null)
+            try
             {
-                return NotFound();
+                var reservation = reservationService.ReadSingle(id);
+                return View(reservation);
             }
-            return View(reservation);
-
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
         [HttpPost, ActionName("Delete")]
         public IActionResult DeleteConfirmed(int id)

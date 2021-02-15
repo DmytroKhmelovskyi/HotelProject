@@ -1,8 +1,9 @@
-﻿using Hotel.Shared.FilterModels;
-using Hotel.Web.Interfaces;
-using Hotel.Web.VIewModel;
+﻿using Hotel.BL.Interfaces;
+using Hotel.Shared.FilterModels;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using Hotel.BL.Models;
+using Hotel.BL.Services;
 
 namespace Hotel.Web.Controllers
 {
@@ -14,7 +15,7 @@ namespace Hotel.Web.Controllers
         {
             this.guestService = guestService;
         }
-        public IActionResult Index( string searchString, int? pageNumber,  GuestFilter guestFilter)
+        public IActionResult Index(string searchString, int? pageNumber, GuestFilter guestFilter)
         {
             try
             {
@@ -42,7 +43,7 @@ namespace Hotel.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(GuestViewModel model)
+        public IActionResult Create( GuestViewModel model)
         {
             if (ModelState.IsValid)
             {

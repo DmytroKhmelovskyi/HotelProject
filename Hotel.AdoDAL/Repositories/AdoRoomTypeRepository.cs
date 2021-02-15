@@ -41,22 +41,31 @@ namespace Hotel.AdoDAL.Repositories
 
         public RoomType DeleteRoomType(int id)
         {
-            var roomType = new RoomType();
-            using (var conn = new SqlConnection(connectionString))
+            if (!IsRoomTypeExist(id) && !id.Equals(null))
             {
-                var cmd = new SqlCommand();
-                cmd.Connection = conn;
-
-                cmd.CommandText = "DELETE FROM RoomTypes WHERE Id = @Id";
-                cmd.Parameters.AddWithValue("@Id", id);
-
-                if (conn.State != ConnectionState.Open)
+                var roomType = new RoomType();
+                using (var conn = new SqlConnection(connectionString))
                 {
-                    conn.Open();
+                    var cmd = new SqlCommand();
+                    cmd.Connection = conn;
+
+                    cmd.CommandText = "DELETE FROM RoomTypes WHERE Id = @Id";
+                    cmd.Parameters.AddWithValue("@Id", id);
+
+                    if (conn.State != ConnectionState.Open)
+                    {
+                        conn.Open();
+                    }
+                    cmd.ExecuteNonQuery();
                 }
-                cmd.ExecuteNonQuery();
+                return roomType;
             }
-            return roomType;
+            else
+            {
+
+                throw new Exception("There is no such an roomType in a database");
+
+            }
         }
 
         public IEnumerable<RoomType> ReadRoomTypes()
@@ -171,23 +180,50 @@ namespace Hotel.AdoDAL.Repositories
 
         public RoomType UpdateRoomType(int id, RoomType roomType)
         {
+            if (!IsRoomTypeExist(id) && !id.Equals(null))
+            {
+                using (var conn = new SqlConnection(connectionString))
+                {
+                    var cmd = new SqlCommand();
+                    cmd.Connection = conn;
+
+                    cmd.CommandText = $"UPDATE RoomTypes SET RoomType = '{roomType.Type}'";
+                    cmd.Parameters.AddWithValue("@id", roomType.Id);
+                    cmd.Parameters.AddWithValue("@RoomType", roomType.Type);
+
+                    if (conn.State != ConnectionState.Open)
+                    {
+                        conn.Open();
+                    }
+
+                    cmd.ExecuteNonQuery();
+                }
+                return roomType;
+            }
+            else
+            {
+
+                throw new Exception("There is no such an roomType in a database");
+
+            }
+        }
+        private bool IsRoomTypeExist(int id)
+        {
             using (var conn = new SqlConnection(connectionString))
             {
-                var cmd = new SqlCommand();
-                cmd.Connection = conn;
-
-                cmd.CommandText = $"UPDATE RoomTypes SET RoomType = '{roomType.Type}'";
-                cmd.Parameters.AddWithValue("@id", roomType.Id);
-                cmd.Parameters.AddWithValue("@RoomType", roomType.Type);
-
                 if (conn.State != ConnectionState.Open)
                 {
                     conn.Open();
                 }
-
-                cmd.ExecuteNonQuery();
+                SqlDataAdapter da = new SqlDataAdapter($"SELECT * FROM RoomTypes WHERE Id = {id}", conn);
+                DataSet ds1 = new DataSet();
+                da.Fill(ds1);
+                int i = ds1.Tables[0].Rows.Count;
+                if (i > 0)
+                    return true;
+                else
+                    return false;
             }
-            return roomType;
         }
     }
 }

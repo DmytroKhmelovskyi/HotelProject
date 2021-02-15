@@ -2,6 +2,7 @@
 using Hotel.Shared.Interfaces;
 using Hotel.Shared.Models;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -45,25 +46,31 @@ namespace Hotel.AdoDAL.Repositories
 
         public Guest DeleteGuests(int id)
         {
-            var guest = new Guest();
-            using (var conn = new SqlConnection(connectionString))
+            if (IsGuestExist(id) && !id.Equals(null))
             {
-                var cmd = new SqlCommand();
-                cmd.Connection = conn;
-
-                cmd.CommandText = "DELETE FROM Guests WHERE Id = @Id ";
-                cmd.Parameters.AddWithValue("@Id", id);
-
-                if (conn.State != ConnectionState.Open)
+                var guest = new Guest();
+                using (var conn = new SqlConnection(connectionString))
                 {
-                    conn.Open();
+                    var cmd = new SqlCommand();
+                    cmd.Connection = conn;
+
+                    cmd.CommandText = "DELETE FROM Guests WHERE Id = @Id ";
+                    cmd.Parameters.AddWithValue("@Id", id);
+
+                    if (conn.State != ConnectionState.Open)
+                    {
+                        conn.Open();
+                    }
+                    cmd.ExecuteNonQuery();
                 }
-                cmd.ExecuteNonQuery();
+                return guest;
             }
-            return guest;
 
+            else
+            {
+                throw new Exception("There is no such an guest in a database");
+            }
         }
-
         public IEnumerable<Guest> ReadGuests()
         {
             var guests = new List<Guest>();
@@ -132,14 +139,14 @@ namespace Hotel.AdoDAL.Repositories
                     FROM Guests {where};";
 
                 logger.LogInformation(selectCmd);
-                
+
                 cmd.CommandText = selectCmd;
 
                 if (conn.State != ConnectionState.Open)
                 {
                     conn.Open();
                 }
-            
+
                 using (var dr = cmd.ExecuteReader())
                 {
                     while (dr.Read())
@@ -206,48 +213,55 @@ namespace Hotel.AdoDAL.Repositories
 
         public Guest UpdateGuests(int id, Guest guest)
         {
-            using (var conn = new SqlConnection(connectionString))
+            if (IsGuestExist(id) && !id.Equals(null))
             {
-                var cmd = new SqlCommand();
-                cmd.Connection = conn;
-
-                cmd.CommandText = $"UPDATE Guests SET FirstName = '{guest.FirstName}', LastName = '{guest.LastName}', Email = '{guest.Email}', " +
-                    $"Phone = '{guest.Phone}', City = '{guest.City}', Country = '{guest.Country}' WHERE Id = {id}";
-                cmd.Parameters.AddWithValue("@id", guest.Id);
-                cmd.Parameters.AddWithValue("@FirstName", guest.FirstName = guest.FirstName);
-                cmd.Parameters.AddWithValue("@LastName", guest.LastName);
-                cmd.Parameters.AddWithValue("@Email", guest.Email);
-                cmd.Parameters.AddWithValue("@Phone", guest.Phone);
-                cmd.Parameters.AddWithValue("@City", guest.City);
-                cmd.Parameters.AddWithValue("@Country", guest.Country);
-
-                if (conn.State != ConnectionState.Open)
+                using (var conn = new SqlConnection(connectionString))
                 {
-                    conn.Open();
+                    var cmd = new SqlCommand();
+                    cmd.Connection = conn;
+
+                    cmd.CommandText = $"UPDATE Guests SET FirstName = '{guest.FirstName}', LastName = '{guest.LastName}', Email = '{guest.Email}', " +
+                        $"Phone = '{guest.Phone}', City = '{guest.City}', Country = '{guest.Country}' WHERE Id = {id}";
+                    cmd.Parameters.AddWithValue("@id", guest.Id);
+                    cmd.Parameters.AddWithValue("@FirstName", guest.FirstName = guest.FirstName);
+                    cmd.Parameters.AddWithValue("@LastName", guest.LastName);
+                    cmd.Parameters.AddWithValue("@Email", guest.Email);
+                    cmd.Parameters.AddWithValue("@Phone", guest.Phone);
+                    cmd.Parameters.AddWithValue("@City", guest.City);
+                    cmd.Parameters.AddWithValue("@Country", guest.Country);
+
+                    if (conn.State != ConnectionState.Open)
+                    {
+                        conn.Open();
+                    }
+
+                    cmd.ExecuteNonQuery();
                 }
 
-                cmd.ExecuteNonQuery();
+                return guest;
+            }
+            else
+            {
+                throw new Exception("There is no such an guest in a database");
             }
 
-            return guest;
-
         }
-        private int GetTotalCount()
+        private bool IsGuestExist(int id)
         {
             using (var conn = new SqlConnection(connectionString))
             {
-                var cmd = new SqlCommand();
-                cmd.Connection = conn;
-
-                cmd.CommandText = "SELECT COUNT(*) FROM Guests";
-
                 if (conn.State != ConnectionState.Open)
                 {
                     conn.Open();
                 }
-
-                return (int)cmd.ExecuteScalar();
-
+                SqlDataAdapter da = new SqlDataAdapter($"SELECT * FROM Guests WHERE Id = {id}", conn);
+                DataSet ds1 = new DataSet();
+                da.Fill(ds1);
+                int i = ds1.Tables[0].Rows.Count;
+                if (i > 0)
+                    return true;
+                else
+                    return false;
             }
         }
 

@@ -3,6 +3,7 @@
 using Hotel.Shared.FilterModels;
 using Hotel.Shared.Interfaces;
 using Hotel.Shared.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -68,33 +69,23 @@ namespace Hotel.EntityFrameworkDAL.Repositories
 
         public (IEnumerable<Payment>, int) ReadPayments(PaymentFilter filter)
         {
-            var orderBy = "";
+            var query = context.Payments.Include(p => p.Guest).Take(filter.Take).Skip(filter.Skip);
+
             switch (filter.SortOrder)
             {
                 case "amount":
-                    orderBy = "Amount";
+                    query = query.OrderBy(p => p.Amount);
                     break;
                 case "payTime":
-                    orderBy = "PayTime";
+                    query = query.OrderBy(p => p.PayTime);
                     break;
                 default:
-                    orderBy = "Id";
+                    query = query.OrderBy(p => p.Id);
                     break;
             }
-            IEnumerable<Payment> paymentsList = context.Payments.ToList();
-            IEnumerable<Guest> guestsList = context.Guests.ToList();
-            var query = from payment in paymentsList
-                        join guest in guestsList
-                        on (payment.Guest.FirstName, payment.Guest.LastName)
-                        equals (guest.FirstName, guest.LastName)
-                        orderby orderBy
-                        select (payment.GuestId, payment.ReservationId, payment.Amount, payment.PayTime, guest.FirstName,
-                       guest.LastName);
-
-            paymentsList.Skip(filter.Skip)
-                .Take(filter.Take);
-            var count = paymentsList.Count();
-            return(paymentsList, count);
+            var payments = query.ToList();
+            return (payments, payments.Count
+                );
 
         }
     }

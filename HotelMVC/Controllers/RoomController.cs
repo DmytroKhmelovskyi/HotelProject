@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Hotel.BL.Interfaces;
 using Hotel.Shared.FilterModels;
-using Hotel.Shared.Interfaces;
-using Hotel.Shared.Models;
-using Hotel.Web.Interfaces;
-using Hotel.Web.VIewModel;
 using Microsoft.AspNetCore.Mvc;
+using Hotel.BL.Models;
+using System;
+using Hotel.BL.Services;
 
 namespace Hotel.Web.Controllers
 {
@@ -20,14 +16,21 @@ namespace Hotel.Web.Controllers
         }
         public IActionResult Index(int? pageNumber, RoomFilter roomFilter)
         {
-            ViewData["CurrentSort"] = roomFilter.SortOrder;
-            ViewData["RoomNumberSortParm"] = String.IsNullOrEmpty(roomFilter.SortOrder) ? "roomNumber" : "";
-            ViewData["MaxPersonSortParm"] = roomFilter.SortOrder == "MaxPerson" ? "maxPerson" : "MaxPerson";
-            roomFilter.Take = 5;
-            pageNumber ??= 1;
-            roomFilter.Skip = (pageNumber.Value - 1) * roomFilter.Take;
-            var (rooms, count) = roomService.ReadRooms(roomFilter);
-            return View(PaginatedList<RoomViewModel>.Create(rooms, count, pageNumber.Value, roomFilter.Take));
+            try
+            {
+                ViewData["CurrentSort"] = roomFilter.SortOrder;
+                ViewData["RoomNumberSortParm"] = String.IsNullOrEmpty(roomFilter.SortOrder) ? "roomNumber" : "";
+                ViewData["MaxPersonSortParm"] = roomFilter.SortOrder == "MaxPerson" ? "maxPerson" : "MaxPerson";
+                roomFilter.Take = 5;
+                pageNumber ??= 1;
+                roomFilter.Skip = (pageNumber.Value - 1) * roomFilter.Take;
+                var (rooms, count) = roomService.ReadRooms(roomFilter);
+                return View(PaginatedList<RoomViewModel>.Create(rooms, count, pageNumber.Value, roomFilter.Take));
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
         [HttpGet]
         public IActionResult Create()
@@ -48,25 +51,28 @@ namespace Hotel.Web.Controllers
         [HttpGet]
         public IActionResult Details(int id)
         {
-
-            var room = roomService.ReadSingle(id);
-            if (room == null)
+            try
             {
-                return NotFound();
+                var room = roomService.ReadSingle(id);
+                return View(room);
             }
-
-            return View(room);
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
         [HttpGet]
         public IActionResult Edit(int id)
         {
-
-            var room = roomService.ReadSingle(id);
-            if (room == null)
+            try
             {
-                return NotFound();
+                var room = roomService.ReadSingle(id);
+                return View(room);
             }
-            return View(room);
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPost]
@@ -82,12 +88,15 @@ namespace Hotel.Web.Controllers
         [HttpGet]
         public IActionResult Delete(int id)
         {
-            var room = roomService.ReadSingle(id);
-            if (room == null)
+            try
             {
-                return NotFound();
+                var room = roomService.ReadSingle(id);
+                return View(room);
             }
-            return View(room);
+            catch (Exception)
+            {
+                return BadRequest();
+            }
 
         }
         [HttpPost, ActionName("Delete")]
