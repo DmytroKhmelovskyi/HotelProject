@@ -4,15 +4,21 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using Hotel.BL.Services;
 using Hotel.BL.Models;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Hotel.Web.Controllers
 {
     public class ReservationController : Controller
     {
         private IReservationService reservationService;
-        public ReservationController(IReservationService reservationService)
+        private IGuestService guestService;
+        private IRoomService roomService;
+        public ReservationController(IReservationService reservationService, IGuestService guestService, IRoomService roomService)
         {
             this.reservationService = reservationService;
+            this.guestService = guestService;
+            this.roomService = roomService;
         }
         public IActionResult Index(int? pageNumber, ReservationFilter reservationFilter)
         {
@@ -35,6 +41,14 @@ namespace Hotel.Web.Controllers
         [HttpGet]
         public IActionResult Create()
         {
+            var guests = guestService.ReadGuests();
+            var guestItems = guests.Select(g => new SelectListItem { Value = $"{g.Id}", Text = $"{g.FirstName} {g.LastName}" });
+            ViewBag.Guests = guestItems;
+
+            var rooms = roomService.ReadRooms();
+            var roomItems = rooms.Select(r => new SelectListItem { Value = $"{r.Id}", Text = $"room status: {r.RoomStatusName} room number: {r.RoomNumber}" });
+            ViewBag.Rooms = roomItems;
+
             return View();
         }
 
@@ -66,6 +80,14 @@ namespace Hotel.Web.Controllers
         {
             try
             {
+                var guests = guestService.ReadGuests();
+                var guestItems = guests.Select(g => new SelectListItem { Value = $"{g.Id}", Text = $"{g.FirstName} {g.LastName}" });
+                ViewBag.Guests = guestItems;
+
+                var rooms = roomService.ReadRooms();
+                var roomItems = rooms.Select(r => new SelectListItem { Value = $"{r.Id}", Text = $"{r.Id} ({r.RoomStatusName}) room number:{r.RoomNumber}" });
+                ViewBag.Rooms = roomItems;
+
                 var reservation = reservationService.ReadSingle(id);
                 return View(reservation);
             }

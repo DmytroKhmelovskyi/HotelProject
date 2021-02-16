@@ -1,6 +1,7 @@
 ﻿using Hotel.Shared.FilterModels;
 using Hotel.Shared.Interfaces;
 using Hotel.Shared.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -67,7 +68,22 @@ namespace Hotel.EntityFrameworkDAL.Repositories
 
         public (IEnumerable<Room> rooms, int count) ReadRooms(RoomFilter filter)
         {
-            throw new NotImplementedException();
+            var query = context.Rooms.Include(r => r.RoomStatus).Include(r => r.RoomType).Take(filter.Take).Skip(filter.Skip);
+
+            switch (filter.SortOrder)
+            {
+                case "RoomNumber":
+                    query = query.OrderBy(r => r.RoomNumber);
+                    break;
+                case "MaxPerson":
+                    query = query.OrderBy(r => r.MaxPerson);
+                    break;
+                default:
+                    query = query.OrderBy(r => r.Id);
+                    break;
+            }
+            var rooms = query.ToList();
+            return (rooms, rooms.Count);
         }
     }
 }

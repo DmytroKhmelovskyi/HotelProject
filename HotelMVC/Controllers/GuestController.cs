@@ -43,7 +43,7 @@ namespace Hotel.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create( GuestViewModel model)
+        public IActionResult Create(GuestViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -58,7 +58,7 @@ namespace Hotel.Web.Controllers
             try
             {
                 var guest = guestService.ReadSingle(id);
-                return View(guest);
+                return PartialView(guest);
             }
             catch (Exception)
             {

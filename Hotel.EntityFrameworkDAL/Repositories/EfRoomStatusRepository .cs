@@ -58,7 +58,10 @@ namespace Hotel.EntityFrameworkDAL.Repositories
 
         public (IEnumerable<RoomStatus> roomStatuses, int count) ReadRoomStatuses(RoomStatusFilter filter)
         {
-            throw new NotImplementedException();
+            var query = context.RoomStatuses.Take(filter.Take).Skip(filter.Skip);
+
+            var roomStatuses = query.ToList();
+            return (roomStatuses, roomStatuses.Count);
         }
     }
 }

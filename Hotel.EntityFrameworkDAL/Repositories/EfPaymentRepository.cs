@@ -84,8 +84,7 @@ namespace Hotel.EntityFrameworkDAL.Repositories
                     break;
             }
             var payments = query.ToList();
-            return (payments, payments.Count
-                );
+            return (payments, payments.Count);
 
         }
     }

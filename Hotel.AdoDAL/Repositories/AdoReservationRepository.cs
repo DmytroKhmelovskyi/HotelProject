@@ -47,7 +47,7 @@ namespace Hotel.AdoDAL.Repositories
 
         public Reservation DeleteReservation(int id)
         {
-            if (!IsReservationExist(id) && !id.Equals(null))
+            if (IsReservationExist(id) && !id.Equals(null))
             {
                 var reservation = new Reservation();
                 using (var conn = new SqlConnection(connectionString))
@@ -148,7 +148,9 @@ namespace Hotel.AdoDAL.Repositories
                 var cmd = new SqlCommand();
                 cmd.Connection = conn;
 
-                cmd.CommandText = "SELECT * FROM Reservations";
+                cmd.CommandText = "SELECT R.*, G.FirstName, G.LastName FROM Reservations R " +
+                    "JOIN Guests G " +
+                    "ON G.Id = R.GuestId";
 
                 if (conn.State != ConnectionState.Open)
                 {
@@ -163,6 +165,12 @@ namespace Hotel.AdoDAL.Repositories
                         {
                             Id = dr.GetInt32("Id"),
                             GuestId = dr.GetInt32("GuestId"),
+                            Guest = new Guest
+                            {
+                                Id = dr.GetInt32("GuestId"),
+                                FirstName = dr.GetString("FirstName"),
+                                LastName = dr.GetString("LastName")
+                            },
                             RoomId = dr.GetInt32("RoomId"),
                             ReservationDate = dr.GetDateTime("ReservationDate"),
                             CheckInDate = dr.GetDateTime("CheckInDate"),
@@ -184,7 +192,7 @@ namespace Hotel.AdoDAL.Repositories
                 var cmd = new SqlCommand();
                 cmd.Connection = conn;
 
-                cmd.CommandText = "SELECT * FROM Reservations";
+                cmd.CommandText = $"SELECT * FROM Reservations WHERE Id = {id}";
 
                 if (conn.State != ConnectionState.Open)
                 {
@@ -214,15 +222,15 @@ namespace Hotel.AdoDAL.Repositories
 
         public Reservation UpdateReservation(int id, Reservation reservation)
         {
-            if (!IsReservationExist(id) && !id.Equals(null))
+            if (IsReservationExist(id) && !id.Equals(null))
             {
                 using (var conn = new SqlConnection(connectionString))
                 {
                     var cmd = new SqlCommand();
                     cmd.Connection = conn;
 
-                    cmd.CommandText = $"UPDATE Reservations SET GuestId = '{reservation.GuestId}', RoomId = '{reservation.RoomId}', ReservationDate = '{reservation.ReservationDate}', " +
-                        $"CheckInDate = '{reservation.CheckInDate}', CheckOutDate = '{reservation.CheckOutDate}', PersonCount = '{reservation}' WHERE Id = {id}";
+                    cmd.CommandText = $"UPDATE Reservations SET GuestId = '{reservation.GuestId}', RoomId = '{reservation.RoomId}', ReservationDate = '{reservation.ReservationDate.Date.ToString("yyyy-MM-dd HH:mm:ss")}', " +
+                        $"CheckInDate = '{reservation.CheckInDate.Date.ToString("yyyy-MM-dd HH:mm:ss")}', CheckOutDate = '{reservation.CheckOutDate.Date.ToString("yyyy-MM-dd HH:mm:ss")}', PersonCount = '{reservation.PersonCount}' WHERE Id = {id}";
                     reservation.Id = id;
                     cmd.Parameters.AddWithValue("@id", reservation.Id);
                     cmd.Parameters.AddWithValue("@guestId", reservation.GuestId);

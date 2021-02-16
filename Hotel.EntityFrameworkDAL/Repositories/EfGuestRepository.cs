@@ -2,6 +2,7 @@
 using Hotel.Shared.FilterModels;
 using Hotel.Shared.Interfaces;
 using Hotel.Shared.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -76,7 +77,29 @@ namespace Hotel.EntityFrameworkDAL.Repositories
 
         public (IEnumerable<Guest> guests, int count) ReadGuests(GuestFilter filter)
         {
-            throw new NotImplementedException();
+
+
+            var query = context.Guests.Take(filter.Take).Skip(filter.Skip);
+            if (!String.IsNullOrEmpty(filter.Name))
+            {
+                query = query.Where(g => g.FirstName.Contains(filter.Name) || g.LastName.Contains(filter.Name));
+            }
+
+            switch (filter.SortOrder)
+            {
+                case "FirstName":
+                    query = query.OrderBy(g => g.FirstName);
+                    break;
+                case "LastName DESC":
+                    query = query.OrderByDescending(g => g.LastName);
+                    break;
+                default:
+                    query = query.OrderBy(g => g.Id);
+                    break;
+            }
+            var guests = query.ToList();
+            return (guests, guests.Count);
+
         }
     }
 }

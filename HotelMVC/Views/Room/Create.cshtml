@@ -14,13 +14,13 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="RoomTypeId" class="control-label"></label>
-                <input asp-for="RoomTypeId" class="form-control" />
+                <label asp-for="RoomTypeId" class="control-label">Room Type</label>
+                @Html.DropDownList("RoomTypeId", (IEnumerable<SelectListItem>)ViewBag.RoomTypes, "--Select roomType--", new { @class = "form-control" })
                 <span asp-validation-for="RoomTypeId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="RoomStatusId" class="control-label"></label>
-                <input asp-for="RoomStatusId" class="form-control" />
+                <label asp-for="RoomStatusId" class="control-label">Room Status</label>
+                @Html.DropDownList("RoomStatusId", (IEnumerable<SelectListItem>)ViewBag.RoomStatuses, "--Select roomStatus--", new { @class = "form-control" })
                 <span asp-validation-for="RoomStatusId" class="text-danger"></span>
             </div>
             <div class="form-group">

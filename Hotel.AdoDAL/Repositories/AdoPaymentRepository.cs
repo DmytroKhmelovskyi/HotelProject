@@ -44,7 +44,7 @@ namespace Hotel.AdoDAL.Repositories
 
         public Payment DeletePayment(int id)
         {
-            if (!IsPaymentExist(id) && !id.Equals(null))
+            if (IsPaymentExist(id) && !id.Equals(null))
             {
                 var payment = new Payment();
                 using (var conn = new SqlConnection(connectionString))
@@ -209,14 +209,14 @@ namespace Hotel.AdoDAL.Repositories
 
         public Payment UpdatePayment(int id, Payment payment)
         {
-            if (!IsPaymentExist(id) && !id.Equals(null))
+            if (IsPaymentExist(id) && !id.Equals(null))
             {
                 using (var conn = new SqlConnection(connectionString))
                 {
                     var cmd = new SqlCommand();
                     cmd.Connection = conn;
 
-                    cmd.CommandText = $"UPDATE Payments SET GuestId = '{payment.GuestId}', ReservationId = '{payment.ReservationId}', Amount = '{payment.Amount}', PayTime = '{payment.PayTime}' WHERE Id = {id}";
+                    cmd.CommandText = $"UPDATE Payments SET GuestId = '{payment.GuestId}', ReservationId = '{payment.ReservationId}', Amount = '{payment.Amount}', PayTime = '{payment.PayTime.Date.ToString("yyyy-MM-dd HH:mm:ss")}' WHERE Id = {id}";
                     cmd.Parameters.AddWithValue("@id", payment.Id);
                     cmd.Parameters.AddWithValue("@GuestId", payment.GuestId);
                     cmd.Parameters.AddWithValue("@ReservationId", payment.ReservationId);

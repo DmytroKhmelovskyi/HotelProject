@@ -1,6 +1,7 @@
 ﻿using Hotel.Shared.FilterModels;
 using Hotel.Shared.Interfaces;
 using Hotel.Shared.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -68,7 +69,22 @@ namespace Hotel.EntityFrameworkDAL.Repositories
 
         public (IEnumerable<Reservation>, int) ReadReservations(ReservationFilter filter)
         {
-            throw new NotImplementedException();
+            var query = context.Reservations.Include(r => r.Guest).Take(filter.Take).Skip(filter.Skip);
+
+            switch (filter.SortOrder)
+            {
+                case "CheckInDate":
+                    query = query.OrderBy(r => r.CheckInDate);
+                    break;
+                case "CheckOutDate":
+                    query = query.OrderBy(r => r.CheckOutDate);
+                    break;
+                default:
+                    query = query.OrderBy(r => r.Id);
+                    break;
+            }
+            var reservations = query.ToList();
+            return (reservations, reservations.Count);
         }
     }
 }

@@ -4,15 +4,22 @@ using Microsoft.AspNetCore.Mvc;
 using Hotel.BL.Models;
 using System;
 using Hotel.BL.Services;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Hotel.Web.Controllers
 {
     public class PaymentController : Controller
     {
         private IPaymentService paymentService;
-        public PaymentController(IPaymentService paymentService)
+        private IGuestService guestService;
+        private IReservationService reservationService;
+        public PaymentController(IPaymentService paymentService, IGuestService guestService, IReservationService reservationService)
         {
             this.paymentService = paymentService;
+            this.guestService = guestService;
+            this.reservationService = reservationService;
         }
         public IActionResult Index(int? pageNumber, PaymentFilter paymentFilter)
         {
@@ -38,6 +45,15 @@ namespace Hotel.Web.Controllers
         [HttpGet]
         public IActionResult Create()
         {
+
+            var guests = guestService.ReadGuests();
+            var guestItems = guests.Select(g => new SelectListItem { Value = $"{g.Id}", Text = $"{g.FirstName} {g.LastName}" });
+            ViewBag.Guests = guestItems;
+
+            var reservations = reservationService.ReadReservations();
+            var reservationItems = reservations.Select(r => new SelectListItem { Value = $"{r.Id}", Text = $"{r.GuestName} ({r.ReservationDate}) room: {r.RoomId}" });
+            ViewBag.Reservations = reservationItems;
+
             return View();
         }
 
@@ -69,6 +85,14 @@ namespace Hotel.Web.Controllers
         {
             try
             {
+
+                var guests = guestService.ReadGuests();
+                var guestItems = guests.Select(g => new SelectListItem { Value = $"{g.Id}", Text = $"{g.FirstName} {g.LastName}" });
+                ViewBag.Guests = guestItems;
+
+                var reservations = reservationService.ReadReservations();
+                var reservationItems = reservations.Select(r => new SelectListItem { Value = $"{r.Id}", Text = $"{r.GuestName} ({r.ReservationDate}) room:{r.RoomId}" });
+                ViewBag.Reservations = reservationItems;
                 var payment = paymentService.ReadSingle(id);
                 return View(payment);
             }

@@ -25,7 +25,7 @@ namespace Hotel.AdoDAL.Repositories
                     var cmd = new SqlCommand();
                     cmd.Connection = conn;
 
-                    cmd.CommandText = "INSERT INTO Rooms (RoomStatus)VALUES (@RoomStatus)";
+                    cmd.CommandText = "INSERT INTO RoomStatuses (RoomStatus)VALUES (@RoomStatus)";
                     cmd.Parameters.AddWithValue("@RoomStatus", roomStatus.Status);
 
                     if (conn.State != ConnectionState.Open)
@@ -41,7 +41,7 @@ namespace Hotel.AdoDAL.Repositories
 
         public RoomStatus DeleteRoomStatus(int id)
         {
-            if (!IsRoomStatusExist(id) && id.Equals(null))
+            if (IsRoomStatusExist(id) && id.Equals(null))
             {
                 var roomStatus = new RoomStatus();
                 using (var conn = new SqlConnection(connectionString))
@@ -49,7 +49,7 @@ namespace Hotel.AdoDAL.Repositories
                     var cmd = new SqlCommand();
                     cmd.Connection = conn;
 
-                    cmd.CommandText = "DELETE FROM RoomStatuses WHERE Id = @Id";
+                    cmd.CommandText = $"DELETE FROM RoomStatuses WHERE Id = {id}";
                     cmd.Parameters.AddWithValue("@Id", id);
 
                     if (conn.State != ConnectionState.Open)
@@ -155,7 +155,7 @@ namespace Hotel.AdoDAL.Repositories
                 var cmd = new SqlCommand();
                 cmd.Connection = conn;
 
-                cmd.CommandText = "SELECT * FROM RoomStatuses";
+                cmd.CommandText = $"SELECT * FROM RoomStatuses WHERE Id = {id}";
 
                 if (conn.State != ConnectionState.Open)
                 {
@@ -180,14 +180,14 @@ namespace Hotel.AdoDAL.Repositories
 
         public RoomStatus UpdateRoomStatus(int id, RoomStatus roomStatus)
         {
-            if (!IsRoomStatusExist(id) && !id.Equals(null))
+            if (IsRoomStatusExist(id) && !id.Equals(null))
             {
                 using (var conn = new SqlConnection(connectionString))
                 {
                     var cmd = new SqlCommand();
                     cmd.Connection = conn;
 
-                    cmd.CommandText = $"UPDATE RoomStatuses SET Status = '{roomStatus.Status}'";
+                    cmd.CommandText = $"UPDATE RoomStatuses SET RoomStatus = '{roomStatus.Status}' WHERE Id = {id}";
                     cmd.Parameters.AddWithValue("@id", roomStatus.Id);
                     cmd.Parameters.AddWithValue("@RoomStatus", roomStatus.Status);
 

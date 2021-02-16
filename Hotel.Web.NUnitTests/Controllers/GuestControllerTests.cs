@@ -27,6 +27,7 @@ namespace Hotel.Web.NUnitTests
             var guestModel = new GuestViewModel()
             {
                 FirstName = "a",
+
             };
             var context = new ValidationContext(guestModel);
             var res = new List<ValidationResult>();

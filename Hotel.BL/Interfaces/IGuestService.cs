@@ -11,6 +11,7 @@ namespace Hotel.BL.Interfaces
         GuestViewModel UpdateGuests(int id, GuestViewModel model);
         GuestViewModel DeleteGuests(int id);
         GuestViewModel ReadSingle(int? id);
+        IEnumerable<GuestViewModel> ReadGuests();
         (IEnumerable<GuestViewModel> models, int count) ReadGuests(GuestFilter filter);
     }
 }

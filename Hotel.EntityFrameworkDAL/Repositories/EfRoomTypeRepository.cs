@@ -57,7 +57,10 @@ namespace Hotel.EntityFrameworkDAL.Repositories
 
         public (IEnumerable<RoomType> roomTypes, int count) ReadRoomTypes(RoomTypeFilter filter)
         {
-            throw new System.NotImplementedException();
+            var query = context.RoomTypes.Take(filter.Take).Skip(filter.Skip);
+
+            var roomTypes = query.ToList();
+            return (roomTypes, roomTypes.Count);
         }
     }
 }

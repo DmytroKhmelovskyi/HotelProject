@@ -25,7 +25,7 @@ namespace Hotel.AdoDAL.Repositories
                     var cmd = new SqlCommand();
                     cmd.Connection = conn;
 
-                    cmd.CommandText = "INSERT INTO Rooms (RoomType)VALUES (@RoomType)";
+                    cmd.CommandText = "INSERT INTO RoomTypes (RoomType)VALUES (@RoomType)";
                     cmd.Parameters.AddWithValue("@RoomType", roomType.Type);
 
                     if (conn.State != ConnectionState.Open)
@@ -41,7 +41,7 @@ namespace Hotel.AdoDAL.Repositories
 
         public RoomType DeleteRoomType(int id)
         {
-            if (!IsRoomTypeExist(id) && !id.Equals(null))
+            if (IsRoomTypeExist(id) && !id.Equals(null))
             {
                 var roomType = new RoomType();
                 using (var conn = new SqlConnection(connectionString))
@@ -49,7 +49,7 @@ namespace Hotel.AdoDAL.Repositories
                     var cmd = new SqlCommand();
                     cmd.Connection = conn;
 
-                    cmd.CommandText = "DELETE FROM RoomTypes WHERE Id = @Id";
+                    cmd.CommandText = $"DELETE FROM RoomTypes WHERE Id = {id}";
                     cmd.Parameters.AddWithValue("@Id", id);
 
                     if (conn.State != ConnectionState.Open)
@@ -155,7 +155,7 @@ namespace Hotel.AdoDAL.Repositories
                 var cmd = new SqlCommand();
                 cmd.Connection = conn;
 
-                cmd.CommandText = "SELECT * FROM RoomTypes";
+                cmd.CommandText = $"SELECT * FROM RoomTypes WHERE Id = {id}";
 
                 if (conn.State != ConnectionState.Open)
                 {
@@ -180,14 +180,14 @@ namespace Hotel.AdoDAL.Repositories
 
         public RoomType UpdateRoomType(int id, RoomType roomType)
         {
-            if (!IsRoomTypeExist(id) && !id.Equals(null))
+            if (IsRoomTypeExist(id) && !id.Equals(null))
             {
                 using (var conn = new SqlConnection(connectionString))
                 {
                     var cmd = new SqlCommand();
                     cmd.Connection = conn;
 
-                    cmd.CommandText = $"UPDATE RoomTypes SET RoomType = '{roomType.Type}'";
+                    cmd.CommandText = $"UPDATE RoomTypes SET RoomType = '{roomType.Type}' WHERE Id = {id} ";
                     cmd.Parameters.AddWithValue("@id", roomType.Id);
                     cmd.Parameters.AddWithValue("@RoomType", roomType.Type);
 

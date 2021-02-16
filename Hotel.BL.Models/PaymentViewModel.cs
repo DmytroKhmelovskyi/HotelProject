@@ -17,6 +17,7 @@ namespace Hotel.BL.Models
         [Required]
         [Range(typeof(decimal), "0,00", "1000000,00")]
         public decimal Amount { get; set; }
-        public DateTime? PayTime { get; set; }
+        public DateTime PayTime { get; set; }
+
     }
 }

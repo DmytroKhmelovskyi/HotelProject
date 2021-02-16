@@ -246,7 +246,7 @@ namespace Hotel.AdoDAL.Repositories
             }
 
         }
-        private bool IsGuestExist(int id)
+        public bool IsGuestExist(int id)
         {
             using (var conn = new SqlConnection(connectionString))
             {

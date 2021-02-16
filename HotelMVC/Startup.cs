@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Hotel.AutoMapperLibrary;
+using Hotel.EntityFrameworkDAL;
 
 namespace Hotel.Web
 {
@@ -23,7 +24,7 @@ namespace Hotel.Web
             services.AddControllersWithViews();
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddAdoRepositories(connectionString);
-            //services.AddEntityFrameworkServices(connectionString);
+            //services.AddEntityFrameworkRepositories(connectionString);
             services.AddMapping();
             services.AddMvcCore()
         .AddDataAnnotations();

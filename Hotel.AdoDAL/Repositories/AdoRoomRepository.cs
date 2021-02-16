@@ -44,7 +44,7 @@ namespace Hotel.AdoDAL.Repositories
 
         public Room DeleteRoom(int id)
         {
-            if (!IsRoomExist(id) && !id.Equals(null))
+            if (IsRoomExist(id) && !id.Equals(null))
             {
                 var room = new Room();
                 using (var conn = new SqlConnection(connectionString))
@@ -52,7 +52,7 @@ namespace Hotel.AdoDAL.Repositories
                     var cmd = new SqlCommand();
                     cmd.Connection = conn;
 
-                    cmd.CommandText = "DELETE FROM Rooms WHERE Id = @Id";
+                    cmd.CommandText = $"DELETE FROM Rooms WHERE Id = {id}";
                     cmd.Parameters.AddWithValue("@Id", id);
 
                     if (conn.State != ConnectionState.Open)
@@ -80,7 +80,9 @@ namespace Hotel.AdoDAL.Repositories
                 var cmd = new SqlCommand();
                 cmd.Connection = conn;
 
-                cmd.CommandText = "SELECT * FROM Rooms";
+                cmd.CommandText = "SELECT R.*, RS.RoomStatus FROM Rooms R" +
+                    " JOIN RoomStatuses RS " +
+                    "ON RS.Id = R.RoomStatusId";
 
                 if (conn.State != ConnectionState.Open)
                 {
@@ -96,6 +98,12 @@ namespace Hotel.AdoDAL.Repositories
                             Id = dr.GetInt32("Id"),
                             RoomTypeId = dr.GetInt32("RoomTypeId"),
                             RoomStatusId = dr.GetInt32("RoomStatusId"),
+                            RoomStatus = new RoomStatus
+                            {
+                                Id = dr.GetInt32("RoomStatusId"),
+                                Status = dr.GetString("RoomStatus")
+                                
+                            },
                             RoomNumber = dr.GetInt32("RoomNumber"),
                             MaxPerson = dr.GetInt32("MaxPerson"),
                         };
@@ -191,7 +199,7 @@ namespace Hotel.AdoDAL.Repositories
                 var cmd = new SqlCommand();
                 cmd.Connection = conn;
 
-                cmd.CommandText = "SELECT * FROM Rooms";
+                cmd.CommandText = $"SELECT * FROM Rooms WHERE Id = {id}";
 
                 if (conn.State != ConnectionState.Open)
                 {
@@ -219,7 +227,7 @@ namespace Hotel.AdoDAL.Repositories
 
         public Room UpdateRoom(int id, Room room)
         {
-            if (!IsRoomExist(id) && !id.Equals(null))
+            if (IsRoomExist(id) && !id.Equals(null))
             {
                 var rooms = new List<Room>();
                 using (var conn = new SqlConnection(connectionString))
@@ -227,7 +235,7 @@ namespace Hotel.AdoDAL.Repositories
                     var cmd = new SqlCommand();
                     cmd.Connection = conn;
 
-                    cmd.CommandText = $"UPDATE Rooms SET RoomTypeId = '{room.RoomTypeId}', RoomStatusId = '{room.RoomStatusId}', RoomNumber = '{room.RoomNumber}', MaxPerson = '{room.MaxPerson}'";
+                    cmd.CommandText = $"UPDATE Rooms SET RoomTypeId = '{room.RoomTypeId}', RoomStatusId = '{room.RoomStatusId}', RoomNumber = '{room.RoomNumber}', MaxPerson = '{room.MaxPerson}' WHERE Id={id}";
                     cmd.Parameters.AddWithValue("@id", room.Id);
                     cmd.Parameters.AddWithValue("@RoomTypeId", room.RoomTypeId);
                     cmd.Parameters.AddWithValue("@RoomStatusId", room.RoomStatusId);
