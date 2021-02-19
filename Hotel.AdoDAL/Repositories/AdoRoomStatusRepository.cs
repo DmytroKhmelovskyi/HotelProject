@@ -41,7 +41,7 @@ namespace Hotel.AdoDAL.Repositories
 
         public RoomStatus DeleteRoomStatus(int id)
         {
-            if (IsRoomStatusExist(id) && id.Equals(null))
+            if (IsRoomStatusExist(id) && !id.Equals(null))
             {
                 var roomStatus = new RoomStatus();
                 using (var conn = new SqlConnection(connectionString))

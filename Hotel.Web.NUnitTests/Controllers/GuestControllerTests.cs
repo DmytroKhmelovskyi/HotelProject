@@ -42,7 +42,11 @@ namespace Hotel.Web.NUnitTests
             var guestModel = new GuestViewModel()
             {
                 FirstName = "Aytda",
-                LastName = "Sdfienr"
+                LastName = "Sdfienr",
+                Email = "dhfet@ukr.net",
+                Phone = "0976543234",
+                City = "City",
+                Country = "Country"
             };
             var context = new ValidationContext(guestModel);
             var res = new List<ValidationResult>();

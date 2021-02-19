@@ -58,7 +58,7 @@ namespace Hotel.Web.Controllers
             try
             {
                 var guest = guestService.ReadSingle(id);
-                return PartialView(guest);
+                return View(guest);
             }
             catch (Exception)
             {

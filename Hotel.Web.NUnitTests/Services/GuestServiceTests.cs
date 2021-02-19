@@ -15,10 +15,7 @@ namespace Hotel.Web.NUnitTests
     [TestFixture]
     public class GuestServiceTests
     {
-        [SetUp]
-        public void Setup()
-        {
-        }
+
 
         [Test]
         public void AddGuest_Success_CallsRepositoryWithCorrectParameters()

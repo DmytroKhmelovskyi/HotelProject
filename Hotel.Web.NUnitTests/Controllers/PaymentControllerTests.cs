@@ -27,13 +27,13 @@ namespace Hotel.NUnitTests.Controllers
             //Arrenge
             var paymentModel = new PaymentViewModel()
             {
-               Amount = 1000000000000
+                Amount = 1000000000000
             };
             var context = new ValidationContext(paymentModel);
             var res = new List<ValidationResult>();
             TypeDescriptor.AddProviderTransparent(new AssociatedMetadataTypeTypeDescriptionProvider(typeof(PaymentViewModel), typeof(PaymentViewModel)), typeof(PaymentViewModel));
 
-           //Act
+            //Act
             var isModelStateValid = Validator.TryValidateObject(paymentModel, context, res);
 
             //Assert
@@ -60,15 +60,17 @@ namespace Hotel.NUnitTests.Controllers
             //Assert
             Assert.IsTrue(isModelStateValid);
         }
-    
+
         [Test]
         public void Index_IsNotNull_ViewResultIsNotNull()
         {
             // arrange
             int pageNumber = 1;
             var filter = new PaymentFilter();
-            var mock = new Mock<IPaymentService>();
-            PaymentController controller = new PaymentController(mock.Object);
+            var paymentsRepo = new Mock<IPaymentService>();
+            var guestsRepo = new Mock<IGuestService>();
+            var reservationsRepo = new Mock<IReservationService>();
+            var controller = new PaymentController(paymentsRepo.Object, guestsRepo.Object, reservationsRepo.Object);
             // act
             var result = controller.Index(pageNumber, filter);
             //assert
@@ -88,17 +90,19 @@ namespace Hotel.NUnitTests.Controllers
 
             };
             var payments = GetTestsPayments();
-            var paymentService = new Mock<IPaymentService>();
-            paymentService.Setup(s => s.ReadPayments(It.Is<PaymentFilter>(f => f.Amount == filter.Amount && f.Take == filter.Take && f.Skip == filter.Skip && f.PayTime == filter.PayTime)))
+            var paymentsRepo = new Mock<IPaymentService>();
+            var guestsRepo = new Mock<IGuestService>();
+            var reservationsRepo = new Mock<IReservationService>();
+            paymentsRepo.Setup(s => s.ReadPayments(It.Is<PaymentFilter>(f => f.Amount == filter.Amount && f.Take == filter.Take && f.Skip == filter.Skip && f.PayTime == filter.PayTime)))
                 .Returns((payments, payments.Count));
-            var controller = new PaymentController(paymentService.Object);
+            var controller = new PaymentController(paymentsRepo.Object, guestsRepo.Object, reservationsRepo.Object);
 
             // Act
             var result = controller.Index(null, filter);
 
             //Assert
 
-            paymentService.Verify(s => s.ReadPayments(filter), Times.Once);
+            paymentsRepo.Verify(s => s.ReadPayments(filter), Times.Once);
 
 
 
@@ -111,9 +115,11 @@ namespace Hotel.NUnitTests.Controllers
         {
             //Arrange
             var payment = new PaymentViewModel();
-            var mock = new Mock<IPaymentService>();
-            mock.Setup(g => g.AddPayment(payment));
-            var controller = new PaymentController(mock.Object);
+            var paymentsRepo = new Mock<IPaymentService>();
+            var guestsRepo = new Mock<IGuestService>();
+            var reservationsRepo = new Mock<IReservationService>();
+            paymentsRepo.Setup(g => g.AddPayment(payment));
+            var controller = new PaymentController(paymentsRepo.Object, guestsRepo.Object, reservationsRepo.Object);
             //Act
             ViewResult result = controller.Create() as ViewResult;
 
@@ -128,8 +134,10 @@ namespace Hotel.NUnitTests.Controllers
             // Arrange
             var testPayment = new PaymentViewModel();
             var paymentsRepo = new Mock<IPaymentService>();
+            var guestsRepo = new Mock<IGuestService>();
+            var reservationsRepo = new Mock<IReservationService>();
             paymentsRepo.Setup(g => g.AddPayment(It.IsAny<PaymentViewModel>()));
-            var controller = new PaymentController(paymentsRepo.Object);
+            var controller = new PaymentController(paymentsRepo.Object, guestsRepo.Object, reservationsRepo.Object);
 
             // Act
             var result = controller.Create(testPayment);
@@ -145,8 +153,10 @@ namespace Hotel.NUnitTests.Controllers
             // Arrange
             var testPayment = new PaymentViewModel();
             var paymentsRepo = new Mock<IPaymentService>();
+            var guestsRepo = new Mock<IGuestService>();
+            var reservationsRepo = new Mock<IReservationService>();
             paymentsRepo.Setup(g => g.AddPayment(It.IsAny<PaymentViewModel>()));
-            var controller = new PaymentController(paymentsRepo.Object);
+            var controller = new PaymentController(paymentsRepo.Object, guestsRepo.Object, reservationsRepo.Object);
             controller.ModelState.AddModelError("", "");
 
             // Act
@@ -165,8 +175,10 @@ namespace Hotel.NUnitTests.Controllers
             var paymentId = 1;
             var testPayment = new PaymentViewModel() { Id = paymentId };
             var paymentsRepo = new Mock<IPaymentService>();
+            var guestsRepo = new Mock<IGuestService>();
+            var reservationsRepo = new Mock<IReservationService>();
             paymentsRepo.Setup(g => g.ReadSingle(paymentId)).Returns(testPayment);
-            var controller = new PaymentController(paymentsRepo.Object);
+            var controller = new PaymentController(paymentsRepo.Object, guestsRepo.Object, reservationsRepo.Object);
 
             // Act
             var result = controller.Details(paymentId);
@@ -182,8 +194,10 @@ namespace Hotel.NUnitTests.Controllers
         {
             // Arrange
             var paymentsRepo = new Mock<IPaymentService>();
+            var guestsRepo = new Mock<IGuestService>();
+            var reservationsRepo = new Mock<IReservationService>();
             paymentsRepo.Setup(g => g.ReadSingle(It.IsAny<int>())).Throws(It.IsAny<Exception>());
-            var controller = new PaymentController(paymentsRepo.Object);
+            var controller = new PaymentController(paymentsRepo.Object, guestsRepo.Object, reservationsRepo.Object);
 
             // Act
             var result = controller.Details(123);
@@ -197,9 +211,11 @@ namespace Hotel.NUnitTests.Controllers
         {
             //Arrange
             var payment = new PaymentViewModel();
-            var mock = new Mock<IPaymentService>();
-            mock.Setup(g => g.ReadSingle(payment.Id));
-            var controller = new PaymentController(mock.Object);
+            var paymentsRepo = new Mock<IPaymentService>();
+            var guestsRepo = new Mock<IGuestService>();
+            var reservationsRepo = new Mock<IReservationService>();
+            paymentsRepo.Setup(g => g.ReadSingle(payment.Id));
+            var controller = new PaymentController(paymentsRepo.Object, guestsRepo.Object, reservationsRepo.Object);
             //Act
             ViewResult result = controller.Details(payment.Id) as ViewResult;
 
@@ -214,8 +230,10 @@ namespace Hotel.NUnitTests.Controllers
             var paymentId = 1;
             var testPayment = new PaymentViewModel() { Id = paymentId };
             var paymentsRepo = new Mock<IPaymentService>();
+            var guestsRepo = new Mock<IGuestService>();
+            var reservationsRepo = new Mock<IReservationService>();
             paymentsRepo.Setup(g => g.ReadSingle(paymentId)).Returns(testPayment);
-            var controller = new PaymentController(paymentsRepo.Object);
+            var controller = new PaymentController(paymentsRepo.Object, guestsRepo.Object, reservationsRepo.Object);
 
             // Act
             var result = controller.Edit(paymentId);
@@ -233,8 +251,10 @@ namespace Hotel.NUnitTests.Controllers
             var paymentId = 1;
             var testPayment = new PaymentViewModel() { Id = paymentId };
             var paymentsRepo = new Mock<IPaymentService>();
+            var guestsRepo = new Mock<IGuestService>();
+            var reservationsRepo = new Mock<IReservationService>();
             paymentsRepo.Setup(g => g.UpdatePayment(paymentId, It.IsAny<PaymentViewModel>()));
-            var controller = new PaymentController(paymentsRepo.Object);
+            var controller = new PaymentController(paymentsRepo.Object, guestsRepo.Object, reservationsRepo.Object);
 
             // Act
             var result = controller.Edit(paymentId, testPayment);
@@ -251,8 +271,10 @@ namespace Hotel.NUnitTests.Controllers
             var paymentId = 1;
             var testPayment = new PaymentViewModel() { Id = paymentId };
             var paymentsRepo = new Mock<IPaymentService>();
+            var guestsRepo = new Mock<IGuestService>();
+            var reservationsRepo = new Mock<IReservationService>();
             paymentsRepo.Setup(g => g.ReadSingle(It.IsAny<int>())).Throws(It.IsAny<Exception>());
-            var controller = new PaymentController(paymentsRepo.Object);
+            var controller = new PaymentController(paymentsRepo.Object, guestsRepo.Object, reservationsRepo.Object);
 
             // Act
             var result = controller.Edit(paymentId);
@@ -266,9 +288,11 @@ namespace Hotel.NUnitTests.Controllers
         {
             //Arrange
             var payment = new PaymentViewModel();
-            var mock = new Mock<IPaymentService>();
-            mock.Setup(g => g.UpdatePayment(payment.Id, payment));
-            var controller = new PaymentController(mock.Object);
+            var paymentsRepo = new Mock<IPaymentService>();
+            var guestsRepo = new Mock<IGuestService>();
+            var reservationsRepo = new Mock<IReservationService>();
+            paymentsRepo.Setup(g => g.UpdatePayment(payment.Id, payment));
+            var controller = new PaymentController(paymentsRepo.Object, guestsRepo.Object, reservationsRepo.Object);
             //Act
             var result = controller.Edit(payment.Id, payment);
 
@@ -277,20 +301,6 @@ namespace Hotel.NUnitTests.Controllers
         }
 
 
-        //[Test]
-        //public void Edit_ModelIsNotValid_ReturnViewWithModel()
-        //{
-        //    var guestModel = new GuestViewModel()
-        //    {
-        //        FirstName = "a"
-        //    };
-        //    var guestService = new Mock<IGuestService>();
-        //    var controller = new GuestController(guestService.Object);
-
-        //    var result = controller.Edit(guestModel.Id, guestModel);
-        //    Assert.That(result, Is.TypeOf<ViewResult>());
-        //}
-
         [Test]
         public void Delete_Success_ReturnsARedirectToActionResut()
         {
@@ -298,8 +308,10 @@ namespace Hotel.NUnitTests.Controllers
             var paymentId = 1;
             var testPayment = new PaymentViewModel() { Id = paymentId };
             var paymentsRepo = new Mock<IPaymentService>();
+            var guestsRepo = new Mock<IGuestService>();
+            var reservationsRepo = new Mock<IReservationService>();
             paymentsRepo.Setup(g => g.DeletePayment(paymentId));
-            var controller = new PaymentController(paymentsRepo.Object);
+            var controller = new PaymentController(paymentsRepo.Object, guestsRepo.Object, reservationsRepo.Object);
 
             // Act
             var result = controller.DeleteConfirmed(paymentId);
@@ -316,8 +328,10 @@ namespace Hotel.NUnitTests.Controllers
             var paymentId = 1;
             var testPayment = new PaymentViewModel() { Id = paymentId };
             var paymentsRepo = new Mock<IPaymentService>();
+            var guestsRepo = new Mock<IGuestService>();
+            var reservationsRepo = new Mock<IReservationService>();
             paymentsRepo.Setup(g => g.ReadSingle(paymentId)).Throws(It.IsAny<Exception>());
-            var controller = new PaymentController(paymentsRepo.Object);
+            var controller = new PaymentController(paymentsRepo.Object, guestsRepo.Object, reservationsRepo.Object);
 
             // Act
             var result = controller.Delete(paymentId);
@@ -333,8 +347,10 @@ namespace Hotel.NUnitTests.Controllers
             var paymentId = 1;
             var testPayment = new PaymentViewModel() { Id = paymentId };
             var paymentsRepo = new Mock<IPaymentService>();
+            var guestsRepo = new Mock<IGuestService>();
+            var reservationsRepo = new Mock<IReservationService>();
             paymentsRepo.Setup(g => g.ReadSingle(paymentId)).Returns(It.IsAny<PaymentViewModel>());
-            var controller = new PaymentController(paymentsRepo.Object);
+            var controller = new PaymentController(paymentsRepo.Object, guestsRepo.Object, reservationsRepo.Object);
 
             // Act
             var result = controller.Delete(paymentId);
@@ -349,9 +365,11 @@ namespace Hotel.NUnitTests.Controllers
         {
             //Arrange
             var payment = new PaymentViewModel();
-            var mock = new Mock<IPaymentService>();
-            mock.Setup(g => g.DeletePayment(payment.Id));
-            var controller = new PaymentController(mock.Object);
+            var paymentsRepo = new Mock<IPaymentService>();
+            var guestsRepo = new Mock<IGuestService>();
+            var reservationsRepo = new Mock<IReservationService>();
+            paymentsRepo.Setup(g => g.DeletePayment(payment.Id));
+            var controller = new PaymentController(paymentsRepo.Object, guestsRepo.Object, reservationsRepo.Object);
             //Act
             ViewResult result = controller.Delete(payment.Id) as ViewResult;
 
