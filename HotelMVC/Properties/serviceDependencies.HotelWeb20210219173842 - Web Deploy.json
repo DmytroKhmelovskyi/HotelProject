@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "mssql1": {
+      "type": "mssql.onprem",
+      "connectionId": "DefaultConnection",
+      "secretStore": "AzureAppSettings"
+    },
+    "mssql2": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroup')]/providers/Microsoft.Sql/servers/hoteldbforapp/databases/HotelDatabase",
+      "type": "mssql.azure",
+      "connectionId": "AzureConnection",
+      "secretStore": "AzureAppSettings"
+    }
+  }
+}
