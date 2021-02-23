@@ -25,6 +25,7 @@ namespace Hotel.Web
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddAdoRepositories(connectionString);
             //services.AddEntityFrameworkRepositories(connectionString);
+            //поломив програму
             services.AddMapping();
             services.AddMvcCore()
         .AddDataAnnotations();
