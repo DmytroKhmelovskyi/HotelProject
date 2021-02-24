@@ -1,15 +1,4 @@
 # ASP.NET Core (.NET Framework)
-- task: SqlAzureDacpacDeployment@1
-  inputs:
-    azureSubscription: 'Azure subscription 1 (2512bf9a-b7f0-4fa1-b04f-bc43ce171f58)'
-    AuthenticationType: 'server'
-    ServerName: 'hoteldbforapp.database.windows.net'
-    DatabaseName: 'HotelDatabase'
-    SqlUsername: 'Dmytro'
-    SqlPassword: '72axm93bz!'
-    deployType: 'DacpacTask'
-    DeploymentAction: 'Publish'
-    IpDetectionMethod: 'AutoDetect'
 # Build and test ASP.NET Core projects targeting the full .NET Framework.
 # Add steps that publish symbols, save build artifacts, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
@@ -45,3 +34,14 @@ steps:
     configuration: '$(buildConfiguration)'
      
 - task: PublishBuildArtifacts@1
+- task: SqlAzureDacpacDeployment@1
+  inputs:
+    azureSubscription: 'Azure subscription 1 (2512bf9a-b7f0-4fa1-b04f-bc43ce171f58)'
+    AuthenticationType: 'server'
+    ServerName: 'hoteldbforapp.database.windows.net'
+    DatabaseName: 'HotelDatabase'
+    SqlUsername: 'Dmytro'
+    SqlPassword: '72axm93bz!'
+    deployType: 'DacpacTask'
+    DeploymentAction: 'Publish'
+    IpDetectionMethod: 'AutoDetect'
