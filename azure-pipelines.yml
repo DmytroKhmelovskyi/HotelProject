@@ -42,6 +42,6 @@ steps:
     DatabaseName: 'HotelDatabase'
     SqlUsername: 'Dmytro'
     SqlPassword: '72axm93bz!'
-    deployType: 'DacpacTask'
+    deployType: 'SqlTask'
     DeploymentAction: 'Publish'
     IpDetectionMethod: 'AutoDetect'
