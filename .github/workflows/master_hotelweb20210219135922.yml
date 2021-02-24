@@ -29,7 +29,7 @@ jobs:
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
       with:
-        app-name: 'hotelweb20210219135922'
+        app-name: 'hotelweb20210219173842'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_50f5ee37592244f3af145324670b78a0 }}
         package: ${{env.DOTNET_ROOT}}/myapp 
