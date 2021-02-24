@@ -22,7 +22,7 @@ namespace Hotel.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
-            var connectionString = Configuration.GetConnectionString("DefaultConnection");
+            var connectionString = Configuration.GetConnectionString("AzureConnection");
             services.AddAdoRepositories(connectionString);
             //services.AddEntityFrameworkRepositories(connectionString);
             //поломив програму
