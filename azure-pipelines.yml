@@ -31,11 +31,7 @@ stages:
         restoreSolution: '**/*NUnitTests/*.csproj'
         feedsToUse: 'select'
         noCache: true
-    - task: DotNetCoreCLI@2
-      inputs:
-        command: test
-        projects: '**/*NUnitTests/*.csproj'
-        arguments: '--configuration $(buildConfiguration)'
+
     
 
     - task: DotNetCoreCLI@2
