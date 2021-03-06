@@ -37,10 +37,6 @@ stages:
         projects: '**/*NUnitTests/*.csproj'
         arguments: '--configuration $(buildConfiguration)'
     
-    - task: CmdLine@2
-      displayName: 'dotnet build --configuration $(buildConfiguration)'
-      inputs:
-        script: dotnet build --configuration $(buildConfiguration)
 
     - task: DotNetCoreCLI@2
       displayName: 'dotnet build test'
