@@ -28,18 +28,18 @@ stages:
     - task: NuGetCommand@2
       inputs:
         command: 'restore'
-        restoreSolution: '**/*Hotel.NUnitTests/*.csproj'
+        restoreSolution: '**/*Hotel.Web.NUnitTests/*.csproj'
         feedsToUse: 'select'
         noCache: true
     - task: DotNetCoreCLI@2
       inputs:
         command: test
-        projects: '**/*Hotel.NUnitTests/*.csproj'
+        projects: '**/*Hotel.Web.NUnitTests/*.csproj'
         arguments: '--configuration $(buildConfiguration)'
     - task: DotNetCoreCLI@2
       displayName: 'dotnet build test'
       inputs:
-        projects: '**/*Hotel.NUnitTests/*.csproj'
+        projects: '**/*Hotel.Web.NUnitTests/*.csproj'
         arguments: '--runtime win-x64'
       continueOnError: true
     - task: VSBuild@1
