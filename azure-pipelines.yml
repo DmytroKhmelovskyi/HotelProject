@@ -4,54 +4,46 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
 trigger:
-  branches:
-    include:
-    - master
+- master
+pool:
+  vmImage: 'windows-latest'
 variables:
-- name: solution
-  value: '**/*.sln'
-- name: buildPlatform
-  value: 'Any CPU'
-- name: buildConfiguration
-  value: 'Release'
-stages:
-- stage: __default
-  jobs:
-  - job: Job
-    pool:
-      vmImage: 'windows-latest'
-    steps:
-    - task: NuGetToolInstaller@1
-    - task: NuGetCommand@2
-      inputs:
-        restoreSolution: '$(solution)'
-    - task: NuGetCommand@2
-      inputs:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+steps:
+- task: NuGetToolInstaller@1
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
+- task: NuGetCommand@2
+  inputs:
         command: 'restore'
-        restoreSolution: '**/*NUnitTests/*.csproj'
+        restoreSolution: '**/*NUnitTests/Hotel.NUnitTests.csproj'
         feedsToUse: 'select'
         noCache: true
-    - task: DotNetCoreCLI@2
-      inputs:
+- task: DotNetCoreCLI@2
+  inputs:
         command: test
-        projects: '**/*NUnitTests/*.csproj'
+        projects: '**/*NUnitTests/Hotel.NUnitTests.csproj'
         arguments: '--configuration $(buildConfiguration)'
-    - task: DotNetCoreCLI@2
-      displayName: 'dotnet build test'
-      inputs:
-        projects: '**/*NUnitTests/*.csproj'
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet build test'
+  inputs:
+        projects: '**/*NUnitTests/Hotel.NUnitTests.csproj'
         arguments: '--runtime win-x64'
-      continueOnError: true
-    - task: VSBuild@1
-      inputs:
-        solution: '$(solution)'
-        msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
-        platform: '$(buildPlatform)'
-        configuration: '$(buildConfiguration)'
-    - task: VSTest@2
-      inputs:
-        platform: '$(buildPlatform)'
-        configuration: '$(buildConfiguration)'
-    - task: PublishBuildArtifacts@1
-      displayName: 'publish artifacts'
+  continueOnError: true
+- task: VSBuild@1
+  inputs:
+    solution: '$(solution)'
+    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+- task: VSTest@2
+  inputs:
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'publish artifacts'
 
